@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <h2 class="mb-4"><i class="fas fa-bullhorn"></i> Bảng tin</h2>
+        {% if announcements %}
+            {% for ann in announcements %}
+                <div class="card mb-3 card-shadow">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ ann.title }}</h5>
+                        <p class="card-text">{{ ann.content|safe }}</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Đăng bởi: <strong>{{ ann.author.username }}</strong> vào lúc {{ ann.timestamp.strftime('%H:%M %d-%m-%Y') }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">Chưa có thông báo nào.</div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        <div class="content-section card-shadow">
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4"><i class="fas fa-paper-plane"></i> Gửi phản hồi</legend>
+                    <p>Có ý kiến đóng góp? Hãy gửi cho chúng tôi!</p>
+                    <div class="form-group">
+                        {% if form.content.errors %}
+                            {{ form.content(class="form-control form-control-lg is-invalid", rows="5") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.content.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.content(class="form-control form-control-lg", rows="5", placeholder="Nhập nội dung của bạn...") }}
+                        {% endif %}
+                    </div>
+                </fieldset>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary btn-block") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

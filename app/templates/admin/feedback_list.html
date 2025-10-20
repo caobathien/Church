@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1 class="mb-4">Danh sách Phản hồi từ Người dùng</h1>
+    <div class="table-responsive card-shadow">
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Người gửi</th>
+                    <th>Nội dung</th>
+                    <th>Thời gian</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for feedback in feedbacks %}
+                <tr>
+                    <td>{{ feedback.sender.username }}</td>
+                    <td style="white-space: pre-wrap; word-break: break-word;">{{ feedback.content }}</td>
+                    <td>{{ feedback.timestamp.strftime('%H:%M %d-%m-%Y') }}</td>
+                    <td>
+                        <form action="{{ url_for('admin.delete_feedback', feedback_id=feedback.id) }}" method="POST">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa phản hồi này?')">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

@@ -1,0 +1,37 @@
+Bước 1: Đăng ký một tài khoản bình thường
+Chạy ứng dụng của bạn (python run.py).
+Mở trình duyệt và truy cập vào trang web.
+Nhấn vào nút "Đăng ký" và tạo một tài khoản mới (ví dụ: tên đăng nhập admin, email admin@example.com và một mật khẩu an toàn).
+Sau khi đăng ký xong, bạn có thể đăng nhập thử để đảm bảo tài khoản hoạt động. Hiện tại, nó vẫn là một tài khoản user thường.
+Bước 2: Sử dụng flask shell để nâng cấp quyền
+Dừng server đang chạy bằng cách nhấn Ctrl + C trong terminal.
+Đảm bảo rằng môi trường ảo của bạn đã được kích hoạt.
+Trong terminal, tại thư mục gốc của dự án (STUDENT_MANAGER), gõ lệnh sau và nhấn Enter:
+Bash
+flask shell
+Lệnh này sẽ mở một môi trường Python tương tác đã được kết nối sẵn với ứng dụng của bạn.
+Bây giờ, hãy gõ lần lượt từng dòng lệnh sau vào shell. Nhớ thay admin@example.com bằng email bạn đã đăng ký ở Bước 1.
+Import các module cần thiết:
+Python
+from app import db
+from app.models.user import User
+Tìm tài khoản người dùng bạn vừa tạo:
+Python
+user = User.query.filter_by(email='admin@example.com').first()
+Kiểm tra xem đã tìm thấy user chưa (tùy chọn):
+Python
+print(user) 
+(Bạn sẽ thấy thông tin user hiện ra, ví dụ: User('admin', 'admin@example.com', 'user'))
+Nâng cấp vai trò của user thành 'admin':
+Python
+user.role = 'admin'
+Lưu thay đổi vào database:
+Python
+db.session.commit()
+Kiểm tra lại lần nữa (tùy chọn):
+Python
+print(user)
+(Bây giờ bạn sẽ thấy vai trò đã đổi: User('admin', 'admin@example.com', 'admin'))
+Thoát khỏi shell:
+Python
+exit()

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">{{ legend }}</legend>
+                
+                <div class="form-group">
+                    {{ form.student_code.label(class="form-control-label") }}
+                    {% if form.student_code.errors %}
+                        {{ form.student_code(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.student_code.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.student_code(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.full_name.label(class="form-control-label") }}
+                    {{ form.full_name(class="form-control form-control-lg") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.date_of_birth.label(class="form-control-label") }}
+                    {{ form.date_of_birth(class="form-control form-control-lg", type="date") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.gender.label(class="form-control-label") }}
+                    {{ form.gender(class="form-control form-control-lg") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.class_name.label(class="form-control-label") }}
+                    {{ form.class_name(class="form-control form-control-lg") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.gpa.label(class="form-control-label") }}
+                    {% if form.gpa.errors %}
+                        {{ form.gpa(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.gpa.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.gpa(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+                <a href="{{ url_for('student.list_students') }}" class="btn btn-outline-secondary">Hủy</a>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
