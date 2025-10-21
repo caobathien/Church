@@ -8,8 +8,8 @@ from app.models.student import Student
 from wtforms.validators import EqualTo, ValidationError
 from flask_login import current_user
 from app.models.user import User
+from flask_wtf.file import FileField, FileAllowed, DataRequired
 
-# ... RegistrationForm và LoginForm giữ nguyên ...
 class RegistrationForm(FlaskForm):
     username = StringField('Tên đăng nhập', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -33,7 +33,6 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Ghi nhớ đăng nhập')
     submit = SubmitField('Đăng nhập')
     
-# ... StudentForm giữ nguyên ...
 class StudentForm(FlaskForm):
     student_code = StringField('Mã sinh viên', validators=[DataRequired(), Length(min=5, max=20)])
     full_name = StringField('Họ và tên', validators=[DataRequired(), Length(min=5, max=100)])
@@ -51,10 +50,15 @@ class StudentForm(FlaskForm):
         if query.first():
             raise ValidationError('Mã sinh viên này đã tồn tại. Vui lòng chọn mã khác.')
 
-# --- FORM MỚI ---
 class AnnouncementForm(FlaskForm):
     title = StringField('Tiêu đề', validators=[DataRequired(), Length(max=100)])
     content = TextAreaField('Nội dung', validators=[DataRequired()])
+
+    image = FileField('Ảnh minh họa (Bắt buộc)', validators=[
+        DataRequired(message="Vui lòng chọn một ảnh để tải lên."), 
+        FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Chỉ chấp nhận file ảnh!')
+    ])
+
     submit = SubmitField('Đăng thông báo')
 
 class FeedbackForm(FlaskForm):

@@ -1,0 +1,65 @@
+.announcement-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem 0;
+}
+
+.announcement-card {
+    background-color: #fff;
+    padding: 2rem 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+}
+
+.announcement-title {
+    text-align: center;
+    color: var(--dark-color);
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #555;
+}
+
+.btn-save {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.btn-save:hover {
+    background-color: var(--dark-color);
+    color: white;
+}
+
+/* Xem trước ảnh */
+.image-preview {
+    width: 100%;
+    min-height: 100px;
+    border: 2px dashed #ddd;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.image-preview span {
+    color: #aaa;
+    font-style: italic;
+}
+
+.image-preview .preview-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}

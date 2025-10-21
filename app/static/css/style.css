@@ -1,67 +1,78 @@
-/* Custom Properties */
-:root {
-    --primary-color: #5f788a;
-    --dark-color: #343a40;
-    --light-color: #f4f4f4;
-    --shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-}
-
+/* ======= Tổng thể ======= */
 body {
-  background: #fafafa;
-  color: #333333;
-  margin-top: 5rem;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background: #f4f6fb;
+    color: #333;
+    min-height: 100vh;
 }
 
-main {
-  flex: 1 0 auto;
+/* ======= Navbar ======= */
+.custom-navbar {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: 0.3s;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  color: #444444;
+.custom-navbar .navbar-brand {
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    color: #fff !important;
 }
 
-.bg-steel {
-  background-color: var(--primary-color);
+.custom-navbar .nav-link {
+    color: #e4e4e4 !important;
+    transition: 0.3s;
+    font-weight: 500;
 }
 
-.site-header .navbar-brand {
-    display: flex;
-    align-items: center;
+.custom-navbar .nav-link:hover,
+.custom-navbar .dropdown-item:hover {
+    color: #fff !important;
+    transform: translateY(-1px);
 }
 
-.site-header .navbar-brand .logo {
-    margin-right: 10px;
+/* ======= Logo ======= */
+.logo {
+    filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));
 }
 
-.site-header .navbar-nav .nav-link {
-  color: #cbd5db;
+/* ======= Flash Message ======= */
+.alert {
+    border-radius: 10px;
+    font-weight: 500;
+    margin-bottom: 20px;
 }
 
-.site-header .navbar-nav .nav-link:hover {
-  color: #ffffff;
+/* ======= Nội dung chính ======= */
+.main-content {
+    background: #fff;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
-.site-header .navbar-nav .nav-link.active {
-  font-weight: 500;
-}
-
-.content-section {
-  background: #ffffff;
-  padding: 20px;
-  border: 1px solid #dddddd;
-  border-radius: 5px;
-  margin-bottom: 20px;
-}
-
-.card-shadow {
-    box-shadow: var(--shadow);
-    border: none;
-    border-radius: 5px;
-}
-
+/* ======= Footer ======= */
 .footer {
-    flex-shrink: 0;
+    background: #fff;
+    border-top: 1px solid #e3e6f0;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+}
+
+.text-gradient {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ======= Dropdown ======= */
+.dropdown-menu {
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* ======= Hiệu ứng ======= */
+.navbar-brand:hover .logo {
+    transform: rotate(-5deg);
+    transition: 0.3s ease;
 }

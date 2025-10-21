@@ -1,63 +1,74 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="content-section">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student_form.css') }}">
+
+<div class="student-form-container">
+    <div class="student-form-card">
+        <h2 class="form-title">{{ legend }}</h2>
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">{{ legend }}</legend>
-                
+
+                <!-- Mã sinh viên -->
                 <div class="form-group">
-                    {{ form.student_code.label(class="form-control-label") }}
+                    {{ form.student_code.label(class="form-label") }}
                     {% if form.student_code.errors %}
-                        {{ form.student_code(class="form-control form-control-lg is-invalid") }}
+                        {{ form.student_code(class="form-control is-invalid") }}
                         <div class="invalid-feedback">
                             {% for error in form.student_code.errors %}
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.student_code(class="form-control form-control-lg") }}
+                        {{ form.student_code(class="form-control") }}
                     {% endif %}
                 </div>
 
+                <!-- Họ tên -->
                 <div class="form-group">
-                    {{ form.full_name.label(class="form-control-label") }}
-                    {{ form.full_name(class="form-control form-control-lg") }}
+                    {{ form.full_name.label(class="form-label") }}
+                    {{ form.full_name(class="form-control") }}
                 </div>
 
+                <!-- Ngày sinh -->
                 <div class="form-group">
-                    {{ form.date_of_birth.label(class="form-control-label") }}
-                    {{ form.date_of_birth(class="form-control form-control-lg", type="date") }}
+                    {{ form.date_of_birth.label(class="form-label") }}
+                    {{ form.date_of_birth(class="form-control", type="date") }}
                 </div>
 
+                <!-- Giới tính -->
                 <div class="form-group">
-                    {{ form.gender.label(class="form-control-label") }}
-                    {{ form.gender(class="form-control form-control-lg") }}
+                    {{ form.gender.label(class="form-label") }}
+                    {{ form.gender(class="form-control") }}
                 </div>
 
+                <!-- Lớp -->
                 <div class="form-group">
-                    {{ form.class_name.label(class="form-control-label") }}
-                    {{ form.class_name(class="form-control form-control-lg") }}
+                    {{ form.class_name.label(class="form-label") }}
+                    {{ form.class_name(class="form-control") }}
                 </div>
 
+                <!-- GPA -->
                 <div class="form-group">
-                    {{ form.gpa.label(class="form-control-label") }}
+                    {{ form.gpa.label(class="form-label") }}
                     {% if form.gpa.errors %}
-                        {{ form.gpa(class="form-control form-control-lg is-invalid") }}
+                        {{ form.gpa(class="form-control is-invalid") }}
                         <div class="invalid-feedback">
                             {% for error in form.gpa.errors %}
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.gpa(class="form-control form-control-lg") }}
+                        {{ form.gpa(class="form-control") }}
                     {% endif %}
                 </div>
             </fieldset>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
-                <a href="{{ url_for('student.list_students') }}" class="btn btn-outline-secondary">Hủy</a>
+
+            <div class="form-group mt-4 text-center">
+                {{ form.submit(class="btn btn-save") }}
+                <a href="{{ url_for('student.list_students') }}" class="btn btn-cancel">Hủy</a>
             </div>
         </form>
     </div>
+</div>
 {% endblock content %}

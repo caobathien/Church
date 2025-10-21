@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f4f6fb;
+}
+
+.student-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 140px);
+}
+
+.student-form-card {
+    background: #fff;
+    width: 100%;
+    max-width: 600px;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+    animation: fadeIn 0.8s ease;
+}
+
+.form-title {
+    text-align: center;
+    color: #333;
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.form-title::after {
+    content: "";
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    display: block;
+    margin: 10px auto 0;
+    border-radius: 5px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+    outline: none;
+}
+
+.is-invalid {
+    border-color: #e74c3c;
+}
+
+.invalid-feedback span {
+    color: #e74c3c;
+    font-size: 0.9em;
+}
+
+.btn-save {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 25px;
+    transition: 0.3s;
+    margin-right: 10px;
+}
+
+.btn-save:hover {
+    background: linear-gradient(45deg, #5a6fd6, #6a4293);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.btn-cancel {
+    background: #e4e6eb;
+    color: #333;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 25px;
+    transition: 0.3s;
+}
+
+.btn-cancel:hover {
+    background: #d0d3d8;
+    transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
