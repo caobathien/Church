@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 from config import Config
 import os
+from flask_ckeditor import CKEditor
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -32,16 +33,18 @@ def create_app(config_class=Config):
     from app.controllers.student_controller import student_bp
     from app.controllers.admin_controller import admin_bp
     from app.controllers.account_controller import account_bp
+    from app.controllers.class_controller import class_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(student_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(account_bp)
+    app.register_blueprint(class_bp)
 
     with app.app_context():
         # Import models để SQLAlchemy có thể tạo bảng
-        from app.models import user, student, announcement, feedback
+        from app.models import user, student, announcement, feedback, class_model
         db.create_all()
 
     return app

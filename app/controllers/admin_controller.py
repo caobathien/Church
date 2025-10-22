@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
+import os
+from flask import Blueprint, current_app, render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
 from app import db
 from app.decorators import admin_required

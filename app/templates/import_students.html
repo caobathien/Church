@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4"><i class="fas fa-file-upload"></i> Nhập sinh viên từ file Excel</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% if not preview %}
+            <div class="form-group">
+                <label for="file">Chọn file Excel (.xlsx hoặc .csv):</label>
+                <input type="file" class="form-control-file" id="file" name="file" required>
+            </div>
+            <button type="submit" name="preview" class="btn btn-info mt-3">
+                <i class="fas fa-eye"></i> Xem trước dữ liệu
+            </button>
+        {% else %}
+            <h5 class="mt-4">📋 Tôi đang xem dữ liệu hẹ hẹ</h5>
+            <div class="table-responsive mt-3">
+                {{ preview|safe }}
+            </div>
+            <button type="submit" name="confirm" class="btn btn-success mt-3">
+                <i class="fas fa-check"></i> Xác nhận nhập dữ liệu
+            </button>
+            <a href="{{ url_for('student.import_students') }}" class="btn btn-secondary mt-3">
+                <i class="fas fa-undo"></i> Chọn lại file khác
+            </a>
+        {% endif %}
+        <a href="{{ url_for('student.list_students') }}" class="btn btn-link mt-3">Quay lại danh sách</a>
+    </form>
+</div>
+{% endblock %}

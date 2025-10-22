@@ -9,8 +9,9 @@ class Student(db.Model):
     full_name = db.Column(db.String(100), nullable=False)
     date_of_birth = db.Column(db.Date, nullable=False)
     gender = db.Column(db.String(10), nullable=False)
-    class_name = db.Column(db.String(50), nullable=False)
+    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=False)
     gpa = db.Column(db.Float, nullable=False)
 
+
     def __repr__(self):
-        return f"Student('{self.full_name}', '{self.student_code}')"
+        return f"Student('{self.full_name}', '{self.student_code}', Class: {self.class_rel.name if self.class_rel else 'N/A'})"

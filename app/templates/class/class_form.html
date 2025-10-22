@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/class_admin.css') }}">
+
+<div class="form-container">
+    <div class="form-card shadow-sm">
+        <h2 class="form-title">{{ legend }}</h2>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <div class="form-group">
+                    {{ form.name.label(class="form-label") }}
+                    {% if form.name.errors %}
+                        {{ form.name(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.name.errors %}<span>{{ error }}</span>{% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.name(class="form-control") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group mt-4 text-center">
+                {{ form.submit(class="btn btn-save") }}
+                <a href="{{ url_for('class_admin.list_classes') }}" class="btn btn-cancel">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

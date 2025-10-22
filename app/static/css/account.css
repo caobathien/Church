@@ -1,80 +1,61 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
-body {
-    font-family: 'Poppins', sans-serif;
-    background: #f4f6fb;
-}
-
 .account-container {
-    margin-top: 20px;
+    padding-top: 1rem; 
 }
 
 .account-card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    padding: 35px;
-    transition: 0.3s;
-    animation: fadeIn 0.6s ease;
-}
-
-.account-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    padding: 2rem 2.5rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--primary-color); 
+    height: 100%; 
 }
 
 .account-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 25px;
-    border-bottom: 3px solid #667eea;
-    padding-bottom: 10px;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+    font-size: 1.5rem;
 }
 
 .account-title i {
-    color: #667eea;
-    margin-right: 8px;
+    margin-right: 10px;
+    color: var(--primary-color);
 }
 
 .form-label {
-    font-weight: 600;
-    color: #444;
-    margin-bottom: 6px;
-    display: block;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 0.5rem;
 }
 
 .form-control {
-    border-radius: 10px;
-    padding: 12px 14px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-    transition: 0.3s;
+    height: 48px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif; /* Ensure font consistency */
 }
 
 .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
-    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(95, 120, 138, 0.25);
 }
 
 .btn-save {
-    background: linear-gradient(45deg, #667eea, #764ba2);
-    color: #fff;
-    font-weight: 600;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    padding: 0.7rem 1.8rem;
     border: none;
-    border-radius: 10px;
-    padding: 10px 30px;
-    transition: 0.3s;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+    cursor: pointer;
 }
 
 .btn-save:hover {
-    background: linear-gradient(45deg, #5a6fd6, #6a4293);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
+    background-color: var(--dark-color);
+    color: white;
 }

@@ -1,77 +1,74 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "auth_base.html" %} {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
 
-<div class="register-container">
-    <div class="register-card">
-        <h2 class="register-title">📝 Tạo tài khoản</h2>
+<div class="register-container"> <div class="register-card">
+        <h2 class="register-title">📝 Tạo tài khoản mới</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <!-- Tên đăng nhập -->
+
                 <div class="form-group">
                     {{ form.username.label(class="form-label") }}
-                    {% if form.username.errors %}
-                        {{ form.username(class="form-control is-invalid") }}
+                    {% if form.username.errors %} {{ form.username(class="form-control is-invalid", placeholder="Nhập tên đăng nhập") }}
                         <div class="invalid-feedback">
-                            {% for error in form.username.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
+                            {% for error in form.username.errors %}<span>{{ error }}</span>{% endfor %}
                         </div>
                     {% else %}
-                        {{ form.username(class="form-control") }}
-                    {% endif %}
-                </div>
+                        {{ form.username(class="form-control", placeholder="Nhập tên đăng nhập") }}
+                    {% endif %} </div>
 
-                <!-- Email -->
                 <div class="form-group">
                     {{ form.email.label(class="form-label") }}
-                    {% if form.email.errors %}
-                        {{ form.email(class="form-control is-invalid") }}
+                    {% if form.email.errors %} {{ form.email(class="form-control is-invalid", placeholder="Nhập địa chỉ email") }}
                         <div class="invalid-feedback">
-                            {% for error in form.email.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
+                            {% for error in form.email.errors %}<span>{{ error }}</span>{% endfor %}
                         </div>
                     {% else %}
-                        {{ form.email(class="form-control") }}
-                    {% endif %}
-                </div>
+                        {{ form.email(class="form-control", placeholder="Nhập địa chỉ email") }}
+                    {% endif %} </div>
 
-                <!-- Mật khẩu -->
                 <div class="form-group">
                     {{ form.password.label(class="form-label") }}
-                    {% if form.password.errors %}
-                        {{ form.password(class="form-control is-invalid") }}
-                    {% else %}
-                        {{ form.password(class="form-control") }}
-                    {% endif %}
-                </div>
-
-                <!-- Xác nhận mật khẩu -->
-                <div class="form-group">
-                    {{ form.confirm_password.label(class="form-label") }}
-                    {% if form.confirm_password.errors %}
-                        {{ form.confirm_password(class="form-control is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.confirm_password.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
+                    {% if form.password.errors %} {{ form.password(class="form-control is-invalid", placeholder="Nhập mật khẩu (ít nhất 6 ký tự)") }}
+                         <div class="invalid-feedback">
+                            {% for error in form.password.errors %}<span>{{ error }}</span>{% endfor %}
                         </div>
                     {% else %}
-                        {{ form.confirm_password(class="form-control") }}
-                    {% endif %}
-                </div>
+                        {{ form.password(class="form-control", placeholder="Nhập mật khẩu (ít nhất 6 ký tự)") }}
+                    {% endif %} </div>
+
+                <div class="form-group">
+                    {{ form.confirm_password.label(class="form-label") }}
+                    {% if form.confirm_password.errors %} {{ form.confirm_password(class="form-control is-invalid", placeholder="Nhập lại mật khẩu") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.confirm_password.errors %}<span>{{ error }}</span>{% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.confirm_password(class="form-control", placeholder="Nhập lại mật khẩu") }}
+                    {% endif %} </div>
             </fieldset>
 
-            <!-- Nút submit -->
             <div class="form-group mt-4">
                 {{ form.submit(class="btn btn-register") }}
             </div>
         </form>
 
         <div class="register-footer">
-            <small>Đã có tài khoản? 
+            <small>Đã có tài khoản?
                 <a href="{{ url_for('auth.login') }}">Đăng nhập ngay</a>
             </small>
         </div>

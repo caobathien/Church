@@ -5,9 +5,7 @@
 <div class="account-container">
     <div class="row">
 
-        <!-- Cập nhật thông tin tài khoản -->
-        <div class="col-md-6 mb-4">
-            <div class="account-card">
+        <div class="col-lg-6 mb-4"> <div class="account-card">
                 <h3 class="account-title"><i class="fas fa-user-edit"></i> Cập nhật thông tin</h3>
                 <form method="POST" action="">
                     {{ update_form.hidden_tag() }}
@@ -22,15 +20,13 @@
                         </div>
                     </fieldset>
                     <div class="form-group text-center mt-4">
-                        <input class="btn btn-save" type="submit" name="submit" value="Cập nhật">
+                        <input class="btn btn-save" type="submit" name="submit_update_info" value="Cập nhật">
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- Đổi mật khẩu -->
-        <div class="col-md-6 mb-4">
-            <div class="account-card">
+        <div class="col-lg-6 mb-4"> <div class="account-card">
                 <h3 class="account-title"><i class="fas fa-lock"></i> Đổi mật khẩu</h3>
                 <form method="POST" action="">
                     {{ password_form.hidden_tag() }}
@@ -49,7 +45,7 @@
                         </div>
                     </fieldset>
                     <div class="form-group text-center mt-4">
-                        {{ password_form.submit_password(class="btn btn-save") }}
+                         <input class="btn btn-save" type="submit" name="submit_change_password" value="Đổi mật khẩu">
                     </div>
                 </form>
             </div>
