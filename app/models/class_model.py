@@ -1,12 +1,19 @@
 from app import db
+from app.models.user import class_leaders_association
 
-class Class(db.Model):
+class ClassModel(db.Model):
+    # Tên bảng trong CSDL (quan trọng: phải khớp với ForeignKey ở trên)
+    __tablename__ = 'class_model'
+
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True, nullable=False)
-    
-    # Mối quan hệ: Một Class có nhiều Student
-    # backref='class_rel' tạo thuộc tính student.class_rel để truy cập Class từ Student
-    students = db.relationship('Student', backref='class_rel', lazy=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    students = db.relationship('Student', backref='class_assigned', lazy='dynamic')
+    leaders = db.relationship(
+        'User',
+        secondary=class_leaders_association,
+        back_populates='assigned_classes',
+        lazy='dynamic'
+    )
 
     def __repr__(self):
-        return f"Class('{self.name}')"
+        return f"<ClassModel(id={self.id}, name='{self.name}')>"

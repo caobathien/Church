@@ -21,10 +21,10 @@
     <header class="site-header">
         <nav class="navbar navbar-expand-lg navbar-dark custom-navbar fixed-top">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.home') }}">
+                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main_routes.home') }}">
                 
-                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="logo mr-2" style="height: 30px; width: auto;"> 
-                <span class="brand-text">Student Manager</span>
+                <img src="{{ url_for('static', filename='img/Church.png') }}" alt="Church" class="Church mr-2" style="height: 30px; width: auto;"> 
+                <span class="brand-text">Church Management</span>
             </a>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle">
@@ -34,8 +34,8 @@
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <ul class="navbar-nav mr-auto">
                         {% if current_user.is_authenticated %}
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('main.home') }}">Trang chủ</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('student.list_students') }}">Quản lý Sinh viên</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('main_routes.home') }}">Trang chủ</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('student.list_students') }}">Quản lý Thiếu Nhi</a></li>
                         {% endif %}
                     </ul>
 
@@ -96,7 +96,7 @@
     <!-- FOOTER -->
     <footer class="footer py-3 mt-5">
         <div class="container text-center">
-            <p class="mb-0">© 2025 Student Management — <span class="text-gradient">Designed with ❤️ by Cao Bá Thiên</span></p>
+            <p class="mb-0">© 2025 Church Management — <span class="text-gradient">Designed with ❤️ by Phero Cao Bá Thiên</span></p>
         </div>
     </footer>
 

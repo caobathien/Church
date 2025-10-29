@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student_list.css') }}">
+
+<div class="page-header text-center mb-5">
+    <h1 class="page-title"><i class="fas fa-clipboard-check text-gold me-2"></i> Điểm danh lớp: {{ class_obj.name }}</h1>
+    <p class="text-muted">Đánh dấu sự hiện diện của các em ✝️</p>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group mb-4">
+                <label for="date" class="form-label">Ngày điểm danh:</label>
+                {{ form.date(class="form-control", type="date") }}
+                {% if form.date.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in form.date.errors %}<span>{{ error }}</span>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-gold">
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên Thánh</th>
+                            <th>Họ và tên</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ student.ten_thanh or 'N/A' }}</td>
+                            <td>{{ student.full_name }}</td>
+                            <td>
+                                <select name="status_{{ student.id }}" class="form-control form-control-sm">
+                                    <option value="present" selected>Có mặt</option>
+                                    <option value="absent">Vắng mặt</option>
+                                    <option value="late">Đến muộn</option>
+                                </select>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">
+                                ⛪ Chưa có thiếu nhi nào trong lớp.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center mt-4">
+                {{ form.submit(class="btn btn-success btn-lg") }}
+                <a href="{{ url_for('main_routes.view_class', class_id=class_obj.id) }}" class="btn btn-secondary btn-lg ms-2">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

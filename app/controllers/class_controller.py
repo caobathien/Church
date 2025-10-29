@@ -1,19 +1,35 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required
 from app import db
-from app.models.class_model import Class
+# (SỬA) Import đúng tên Model
+from app.models.class_model import ClassModel 
 from app.forms import ClassForm
 from app.decorators import admin_required
 
+# (SỬA) Đặt tên blueprint rõ ràng hơn, ví dụ 'class_admin'
 class_bp = Blueprint('class_admin', __name__, url_prefix='/admin/classes')
 
 @class_bp.route('/')
 @login_required
-@admin_required
 def list_classes():
     """Hiển thị danh sách các lớp."""
-    classes = Class.query.order_by(Class.name).all()
-    return render_template('class/class_list.html', title='Quản lý Lớp học', classes=classes)
+    # (SỬA) Dùng ClassModel
+    classes = ClassModel.query.order_by(ClassModel.name).all()
+
+    # Lấy thống kê điểm danh cho từng lớp
+    from app.models.attendance import Attendance
+    from sqlalchemy import func
+    attendance_summary = {}
+
+    for class_obj in classes:
+        # Đếm số ngày đã điểm danh cho lớp này
+        attendance_days = db.session.query(func.count(func.distinct(Attendance.date))).filter_by(class_id=class_obj.id).scalar()
+        attendance_summary[class_obj.id] = {
+            'attendance_days': attendance_days
+        }
+
+    # (SỬA) Sửa đường dẫn template cho nhất quán
+    return render_template('admin/class_list.html', title='Quản lý Lớp học', classes=classes, attendance_summary=attendance_summary)
 
 @class_bp.route('/add', methods=['GET', 'POST'])
 @login_required
@@ -22,37 +38,68 @@ def add_class():
     """Thêm lớp học mới."""
     form = ClassForm()
     if form.validate_on_submit():
-        new_class = Class(name=form.name.data)
+        # (SỬA) Dùng ClassModel
+        new_class = ClassModel(name=form.name.data)
         db.session.add(new_class)
         db.session.commit()
         flash('Đã thêm lớp học mới thành công!', 'success')
         return redirect(url_for('class_admin.list_classes'))
-    return render_template('class/class_form.html', title='Thêm Lớp học', form=form, legend='Thêm Lớp học')
+    # (SỬA) Sửa đường dẫn template cho nhất quán
+    return render_template('admin/class_form.html', title='Thêm Lớp học', form=form, legend='Thêm Lớp học mới')
 
 @class_bp.route('/<int:class_id>/update', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def update_class(class_id):
     """Cập nhật tên lớp học."""
-    class_obj = Class.query.get_or_404(class_id)
+    # (SỬA) Dùng ClassModel
+    class_obj = ClassModel.query.get_or_404(class_id)
     form = ClassForm(obj=class_obj)
+    
     if form.validate_on_submit():
         class_obj.name = form.name.data
         db.session.commit()
         flash('Tên lớp đã được cập nhật!', 'success')
         return redirect(url_for('class_admin.list_classes'))
-    return render_template('class/class_form.html', title='Cập nhật Lớp học', form=form, legend=f'Cập nhật Lớp: {class_obj.name}')
+    
+    # (SỬA) Sửa đường dẫn template cho nhất quán
+    return render_template('admin/class_form.html', title='Cập nhật Lớp học', form=form, legend=f'Cập nhật: {class_obj.name}')
 
 @class_bp.route('/<int:class_id>/delete', methods=['POST'])
 @login_required
 @admin_required
 def delete_class(class_id):
-    """Xóa lớp học (chỉ khi không còn sinh viên)."""
-    class_obj = Class.query.get_or_404(class_id)
-    if class_obj.students: # Kiểm tra xem lớp còn sinh viên không
-        flash('Không thể xóa lớp học này vì vẫn còn sinh viên.', 'danger')
+    """Xóa lớp học (chỉ khi không còn thiếu nhi VÀ không còn HT/DT)."""
+    # (SỬA) Dùng ClassModel
+    class_obj = ClassModel.query.get_or_404(class_id)
+    
+    # (SỬA) Kiểm tra cả student và leader (dùng .first() cho hiệu quả)
+    if class_obj.students.first():
+        flash('Không thể xóa. Vẫn còn thiếu nhi trong lớp học này.', 'danger')
+    elif class_obj.leaders.first():
+        flash('Không thể xóa. Vẫn còn Huynh/Dự Trưởng được phân công vào lớp này.', 'danger')
     else:
+        # Nếu an toàn, tiến hành xóa
         db.session.delete(class_obj)
         db.session.commit()
         flash('Lớp học đã được xóa!', 'success')
+
     return redirect(url_for('class_admin.list_classes'))
+
+def view_details(class_id):
+    """Trang xem chi tiết một lớp, danh sách thiếu nhi, điểm số..."""
+    # (SỬA) Dùng ClassModel
+    class_obj = ClassModel.query.get_or_404(class_id)
+    students = class_obj.students.all()
+    # (SỬA) Sửa đường dẫn template cho nhất quán
+    return render_template('class/class_detail.html', class_obj=class_obj, students=students)
+
+def manage_all():
+    """Trang quản lý tất cả các lớp học."""
+    classes = ClassModel.query.order_by(ClassModel.name).all()
+    return render_template('admin/class_list.html', title='Quản lý Lớp học', classes=classes)
+
+def assign_leader():
+    """Trang phân công Huynh trưởng/Dự trưởng vào lớp."""
+    from app.controllers.admin_controller import assign_leader as admin_assign_leader
+    return admin_assign_leader()

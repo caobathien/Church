@@ -1,65 +1,172 @@
+/* ✝️ GIAO DIỆN THÔNG BÁO - PHONG CÁCH NHÀ THỜ */
 .announcement-container {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 2rem 0;
+    padding: 2.5rem 1rem;
+    background: linear-gradient(
+        rgba(255, 255, 255, 0.95),
+        rgba(255, 255, 255, 0.95)
+    ),
+    url('https://source.unsplash.com/1600x900/?church,light,cathedral');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 .announcement-card {
-    background-color: #fff;
-    padding: 2rem 2.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 800px;
+    max-width: 850px;
+    padding: 2.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(210, 210, 210, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
+.announcement-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* 🌟 TIÊU ĐỀ */
 .announcement-title {
     text-align: center;
+    font-family: 'Playfair Display', serif;
     color: var(--dark-color);
     margin-bottom: 2rem;
     font-weight: 600;
+    font-size: 1.8rem;
+    position: relative;
 }
 
+.announcement-title::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: var(--soft-gold, #d4af37);
+    margin: 12px auto 0;
+    border-radius: 3px;
+}
+
+/* 🕊️ NHÃN FORM */
 .form-label {
     font-weight: 500;
-    color: #555;
+    color: #444;
+    margin-bottom: 0.5rem;
 }
 
+/* 📋 INPUT, TEXTAREA */
+input[type="text"],
+input[type="file"],
+textarea,
+select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #333;
+    background-color: #fafafa;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color, #5f788a);
+    box-shadow: 0 0 0 3px rgba(95, 120, 138, 0.15);
+}
+
+/* 💾 NÚT LƯU */
 .btn-save {
-    background-color: var(--primary-color);
+    background: linear-gradient(90deg, var(--primary-color, #5f788a), var(--dark-color, #2c3e50));
     color: white;
     font-weight: 500;
-    padding: 0.75rem 2rem;
+    padding: 0.75rem 2.2rem;
     border: none;
-    border-radius: 5px;
-    transition: background-color 0.2s;
+    border-radius: 6px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    display: inline-block;
 }
 
 .btn-save:hover {
-    background-color: var(--dark-color);
+    background: linear-gradient(90deg, var(--dark-color, #2c3e50), var(--primary-color, #5f788a));
+    transform: translateY(-2px);
     color: white;
 }
 
-/* Xem trước ảnh */
+/* 🖼️ XEM TRƯỚC ẢNH */
 .image-preview {
     width: 100%;
-    min-height: 100px;
-    border: 2px dashed #ddd;
-    border-radius: 5px;
+    min-height: 150px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    margin-top: 1rem;
+    background-color: #f8f9fa;
+    transition: border-color 0.3s ease;
+}
+
+.image-preview:hover {
+    border-color: var(--primary-color, #5f788a);
 }
 
 .image-preview span {
-    color: #aaa;
+    color: #999;
     font-style: italic;
+    font-size: 0.95rem;
 }
 
 .image-preview .preview-img {
     width: 100%;
     height: auto;
     object-fit: cover;
+    border-radius: 6px;
+}
+
+/* 🌈 HIỆU ỨNG NHẸ TRÊN CARD */
+.announcement-card::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.15),
+        transparent 70%
+    );
+    animation: glow 6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes glow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 768px) {
+    .announcement-card {
+        padding: 1.8rem 1.2rem;
+    }
+    .announcement-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-save {
+        width: 100%;
+    }
 }

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student_list.css') }}">
+
+<div class="page-header text-center mb-5">
+    <h1 class="page-title"><i class="fas fa-eye text-gold me-2"></i> Chi tiết điểm danh</h1>
+    <p class="text-muted">Lớp: {{ class_obj.name }} - Ngày: {{ attendance_date.strftime('%d-%m-%Y') }} ✝️</p>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-gold">
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên Thánh</th>
+                            <th>Họ và tên</th>
+                            <th>Trạng thái hiện tại</th>
+                            {% if current_user.is_admin() or current_user.is_leader() %}
+                            <th>Trạng thái mới</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ student.ten_thanh or 'N/A' }}</td>
+                            <td>{{ student.full_name }}</td>
+                            <td>
+                                {% set current_status = attendances.get(student.id, {}).status or 'Chưa điểm danh' %}
+                                <span class="badge
+                                    {% if current_status == 'present' %}bg-success
+                                    {% elif current_status == 'absent' %}bg-danger
+                                    {% elif current_status == 'late' %}bg-warning
+                                    {% else %}bg-secondary{% endif %}">
+                                    {% if current_status == 'present' %}Có mặt
+                                    {% elif current_status == 'absent' %}Vắng mặt
+                                    {% elif current_status == 'late' %}Đến muộn
+                                    {% else %}{{ current_status }}{% endif %}
+                                </span>
+                            </td>
+                            {% if current_user.is_admin() or current_user.is_leader() %}
+                            <td>
+                                <select name="status_{{ student.id }}" class="form-control form-control-sm">
+                                    {% set current_status = attendances.get(student.id, {}).status or 'present' %}
+                                    <option value="present" {% if current_status == 'present' %}selected{% endif %}>Có mặt</option>
+                                    <option value="absent" {% if current_status == 'absent' %}selected{% endif %}>Vắng mặt</option>
+                                    <option value="late" {% if current_status == 'late' %}selected{% endif %}>Đến muộn</option>
+                                </select>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="{% if current_user.is_admin() or current_user.is_leader() %}5{% else %}4{% endif %}" class="text-center text-muted py-4">
+                                ⛪ Chưa có thiếu nhi nào trong lớp.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if current_user.is_admin() or current_user.is_leader() %}
+            <div class="text-center mt-4">
+                {{ form.submit(class="btn btn-success btn-lg") }}
+                <a href="{{ url_for('main_routes.view_class', class_id=class_obj.id) }}" class="btn btn-secondary btn-lg ms-2">Hủy</a>
+            </div>
+            {% else %}
+            <div class="text-center mt-4">
+                <a href="{{ url_for('attendance.attendance_history', class_id=class_obj.id) }}" class="btn btn-primary btn-lg">Quay lại lịch sử</a>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock content %}

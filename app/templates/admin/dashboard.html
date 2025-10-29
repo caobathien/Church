@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Admin Dashboard</h1>
+
+    <!-- Thống kê tổng quan -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Người dùng</h5>
+                    <h2>{{ user_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Thiếu nhi</h5>
+                    <h2>{{ student_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Lớp học</h5>
+                    <h2>{{ class_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Phản hồi</h5>
+                    <h2>{{ feedback_count }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Các liên kết quản lý -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quản lý Người dùng</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('account.user_list') }}" class="btn btn-primary">Danh sách Người dùng</a>
+                    <a href="{{ url_for('leader.list_leaders') }}" class="btn btn-secondary">Quản lý Huynh Trưởng & Dự Trưởng</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quản lý Giáo dục</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('class_admin.list_classes') }}" class="btn btn-success">Quản lý Lớp học</a>
+                    <a href="{{ url_for('admin.assign_leader') }}" class="btn btn-info">Phân công Lớp</a>
+                    <a href="{{ url_for('student.list_students') }}" class="btn btn-warning">Danh sách Thiếu nhi</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Thông báo & Phản hồi</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('admin.create_announcement') }}" class="btn btn-primary">Tạo Thông báo</a>
+                    <a href="{{ url_for('admin.view_feedback') }}" class="btn btn-secondary">Xem Phản hồi</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Điểm Danh</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('class_admin.list_classes') }}" class="btn btn-warning">Quản lý Điểm Danh Lớp</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

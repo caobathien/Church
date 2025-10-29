@@ -1,120 +1,109 @@
+body {
+  background: linear-gradient(rgba(255,255,255,0.94), rgba(255,255,255,0.97)),
+              url('https://source.unsplash.com/1600x900/?church,light,children');
+  background-size: cover;
+  background-attachment: fixed;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
 .page-title {
-    font-weight: 700;
-    color: var(--dark-color);
-    font-size: 1.8rem;
-    margin-bottom: 0;
+  font-weight: 600;
+  color: #2c3e50;
 }
 
-.page-title i {
-    color: var(--primary-color);
-    margin-right: 0.75rem;
-}
-.action-buttons {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+.text-gold {
+  color: #d4af37;
 }
 
-.action-buttons .btn {
-    font-weight: 500;
-    padding: 0.6rem 1.1rem;
-    border-radius: var(--border-radius);
-    transition: all 0.2s ease-in-out;
-    box-shadow: var(--shadow-sm);
-    white-space: nowrap;
-}
-.action-buttons .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.action-buttons .btn i {
-    margin-right: 0.5rem;
+.table-gold {
+  background-color: #e3c567;
+  color: #333;
 }
 
-.btn-info { 
-    background-color: #0dcaf0;
-    border-color: #0dcaf0;
-    color: white;
-}
-.btn-info:hover {
-    background-color: #0b9abf;
-    border-color: #0a8aae;
-    color: white;
+.table-hover tbody tr:hover {
+  background-color: rgba(227,197,103,0.15);
 }
 
-.btn-success {
-    background-color: #198754;
-    border-color: #198754;
-    color: white;
-}
-.btn-success:hover {
-    background-color: #146c43;
-    border-color: #13653f;
-    color: white;
+.card {
+  border: none;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.95);
 }
 
 .search-filter-card {
-    border: none;
-    background-color: #ffffff;
-    padding: 1.25rem 1.75rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
+  border-top: 4px solid #e3c567;
 }
 
-.search-filter-card .form-inline {
+.btn-success {
+  background-color: #e3c567;
+  border: none;
+  color: #333;
+  font-weight: 600;
+}
+
+.btn-success:hover {
+  background-color: #d4af37;
+  color: white;
+}
+
+.dropdown-menu {
+  border-radius: 8px;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(227,197,103,0.2);
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+.modal-content {
+  border-radius: 10px;
+  border-top: 4px solid #e3c567;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablet */
+@media (max-width: 992px) {
+  .form-inline {
+    flex-direction: column;
+  }
+  .form-inline .form-group {
     width: 100%;
-    gap: 1rem;
+  }
+  .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }
 
-.search-filter-card .form-group {
-    margin-bottom: 0;
+/* Mobile */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.4rem;
+  }
+  table {
+    font-size: 0.9rem;
+  }
+  .dropdown-menu {
+    position: static;
+    float: none;
+  }
 }
 
-.search-filter-card label {
-    font-weight: 500;
-}
-
-.search-filter-card .form-control {
-    height: calc(1.5em + .75rem + 2px);
-    font-family: 'Poppins', sans-serif;
-    border-radius: var(--border-radius);
-    border: 1px solid #ced4da;
-}
-.search-filter-card .form-control:focus {
-     border-color: var(--primary-color);
-     box-shadow: 0 0 0 0.2rem rgba(95, 120, 138, 0.25);
-}
-
-.search-filter-card .btn-primary {
-     padding: 0.5rem 1rem;
-}
-.search-filter-card .btn-secondary { 
-     padding: 0.5rem 0.8rem;
-}
-
-@media (max-width: 991px) {
-    .d-flex.justify-content-between.align-items-center.flex-wrap { 
-        flex-direction: column;
-        align-items: flex-start !important; 
-    }
-    .action-buttons {
-        margin-top: 1rem; 
-    }
-}
-
-@media (max-width: 767px) { 
-    .search-filter-card .form-inline {
-        flex-direction: column; 
-        align-items: stretch; 
-        gap: 0.75rem;
-    }
-     .search-filter-card .form-inline .form-group {
-         width: 100%;
-     }
-     .search-filter-card .form-inline .btn {
-        width: 48%; 
-    }
-     .search-filter-card .form-inline .ml-2 { 
-         margin-left: 4% !important;
-     }
+/* Small Mobile */
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.2rem;
+  }
+  .btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+  .table th, .table td {
+    padding: 0.5rem;
+  }
 }

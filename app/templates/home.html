@@ -1,107 +1,144 @@
 {% extends "base.html" %}
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<script src="{{ url_for('static', filename='js/church_slider.js') }}"></script>
 
-<div class="welcome-section mb-4">
-    <h2>👋 Chào mừng trở lại, {{ current_user.username }}!</h2>
-    <p class="lead text-muted">Đây là bảng điều khiển chính của Hệ thống Quản lý Sinh viên.</p>
+
+<div class="welcome-section text-center mb-5">
+  <h2>✝️ Chào mừng trở lại, {{ current_user.username }}!</h2>
+  <p class="lead text-muted">Nguyện xin ân sủng và bình an của Thiên Chúa luôn ở cùng bạn.</p>
 </div>
 
 <div class="row">
 
-    <div class="col-lg-8">
+  <div class="col-lg-8">
 
-        <div class="quick-access mb-4">
-            <h4 class="section-title">Truy cập nhanh</h4>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <a href="{{ url_for('student.list_students') }}" class="card quick-card h-100">
-                        <div class="card-body d-flex align-items-center">
-                            <i class="fas fa-users fa-2x mr-3 text-primary"></i>
-                            <div>
-                                <h5 class="card-title mb-0">Danh sách Sinh viên</h5>
-                                <p class="card-text text-muted small">Xem và quản lý tất cả sinh viên.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {% if current_user.role == 'admin' %}
-                <div class="col-md-6 mb-3">
-                    <a href="{{ url_for('student.add_student') }}" class="card quick-card h-100">
-                        <div class="card-body d-flex align-items-center">
-                            <i class="fas fa-user-plus fa-2x mr-3 text-success"></i>
-                            <div>
-                                <h5 class="card-title mb-0">Thêm Sinh viên</h5>
-                                <p class="card-text text-muted small">Thêm hồ sơ sinh viên mới.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {% endif %}
+    <!-- Truy cập nhanh -->
+    <div class="quick-access mb-5">
+      <h4 class="section-title">🌿 Truy cập nhanh</h4>
+      <div class="row">
+
+        <div class="col-md-6 mb-3">
+          <a href="{{ url_for('student.list_students') }}" class="card quick-card shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+              <i class="fas fa-users fa-2x text-primary me-3"></i>
+              <div>
+                <h5 class="card-title mb-0">Danh sách Thiếu Nhi</h5>
+                <p class="card-text text-muted small">Xem và quản lý tất cả thiếu nhi.</p>
+              </div>
             </div>
+          </a>
         </div>
 
-        <div class="announcements-section">
-            <h4 class="section-title"><i class="fas fa-bullhorn mr-2"></i> Bảng tin</h4>
-            {% if announcements %}
-                {% for ann in announcements %}
-                <div class="card mb-3 announcement-card shadow-sm">
-                    {% if ann.image_filename %}
-                    <img src="{{ url_for('static', filename='uploads/' + ann.image_filename) }}" class="card-img-top announcement-img" alt="Ảnh thông báo">
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ ann.title }}</h5>
-                        <p class="card-text">{{ ann.content|safe }}</p>
-                    </div>
-                    <div class="card-footer bg-light text-muted d-flex justify-content-between align-items-center">
-                        <div>
-                            <small>Đăng bởi: <strong>{{ ann.author.username }}</strong> lúc {{ ann.timestamp.strftime('%H:%M %d-%m-%Y') }}</small>
-                        </div>
-                        {% if current_user.role == 'admin' %}
-                        <div>
-                            <form action="{{ url_for('admin.delete_announcement', announcement_id=ann.id) }}" method="POST" class="d-inline">
-                                <button type="submit" class="btn btn-outline-danger btn-sm py-0 px-1" title="Xóa thông báo"
-                                        onclick="return confirm('Bạn có chắc chắn muốn xóa thông báo này?')">
-                                    <i class="fas fa-trash fa-xs"></i>
-                                </button>
-                            </form>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endfor %}
-            {% else %}
-            <div class="alert alert-info">Chưa có thông báo nào.</div>
-            {% endif %}
+        <div class="col-md-6 mb-3">
+          <a href="{{ url_for('class_admin.list_classes') }}" class="card quick-card shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+              <i class="fas fa-calendar-check fa-2x text-success me-3"></i>
+              <div>
+                <h5 class="card-title mb-0">Điểm Danh</h5>
+                <p class="card-text text-muted small">Tổng số ngày điểm danh: <strong>{{ total_attendance_days }}</strong></p>
+              </div>
+            </div>
+          </a>
         </div>
+
+        {% if current_user.is_admin() %}
+        <div class="col-md-6 mb-3">
+          <a href="{{ url_for('leader.list_leaders') }}" class="card quick-card shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+              <i class="fas fa-user-shield fa-2x text-info me-3"></i>
+              <div>
+                <h5 class="card-title mb-0">Quản lý Huynh Trưởng & Dự Trưởng</h5>
+                <p class="card-text text-muted small">Xem, thêm, sửa, xóa Huynh Trưởng & Dự Trưởng.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <a href="{{ url_for('admin.assign_leader') }}" class="card quick-card shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+              <i class="fas fa-id-badge fa-2x text-warning me-3"></i>
+              <div>
+                <h5 class="card-title mb-0">Quản lý Lớp & Phân công</h5>
+                <p class="card-text text-muted small">Gán Huynh Trưởng vào các lớp.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <a href="{{ url_for('class_admin.list_classes') }}" class="card quick-card shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+              <i class="fas fa-calendar-check fa-2x text-warning me-3"></i>
+              <div>
+                <h5 class="card-title mb-0">Điểm Danh Lớp</h5>
+                <p class="card-text text-muted small">Quản lý điểm danh cho các lớp.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endif %}
+      </div>
     </div>
 
-    <div class="col-lg-4">
-        <div class="feedback-section card shadow-sm">
-             <div class="card-body">
-                <h4 class="section-title mb-3"><i class="fas fa-paper-plane mr-2"></i> Gửi phản hồi</h4>
-                <p class="text-muted small mb-3">Có ý kiến đóng góp? Hãy gửi cho chúng tôi!</p>
-                <form method="POST" action="">
-                    {{ form.hidden_tag() }}
-                    <fieldset class="form-group">
-                        <div class="form-group">
-                            {{ form.content.label(class="form-label sr-only") }} {% if form.content.errors %}
-                                {{ form.content(class="form-control form-control is-invalid", rows="4", placeholder="Nhập nội dung...") }}
-                                <div class="invalid-feedback">
-                                    {% for error in form.content.errors %}<span>{{ error }}</span>{% endfor %}
-                                </div>
-                            {% else %}
-                                {{ form.content(class="form-control", rows="4", placeholder="Nhập nội dung...") }}
-                            {% endif %}
-                        </div>
-                    </fieldset>
-                    <div class="form-group mb-0">
-                        {{ form.submit(class="btn btn-primary btn-block") }}
-                    </div>
-                </form>
-            </div>
+    <!-- Bảng tin -->
+    <div class="announcements-section">
+      <h4 class="section-title"><i class="fas fa-bullhorn me-2"></i> Bảng tin Giáo Xứ</h4>
+      {% if announcements %}
+      {% for ann in announcements %}
+      <div class="card mb-4 announcement-card shadow-sm">
+        {% if ann.image_filename %}
+        <img src="{{ url_for('static', filename='uploads/' + ann.image_filename) }}" class="card-img-top announcement-img" alt="Ảnh thông báo">
+        {% else %}
+        <div class="church-slider">
+          <img id="churchImage" src="{{ url_for('static', filename='img/church2.png') }}" alt="Ảnh nhà thờ">
         </div>
+
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title text-gold">{{ ann.title }}</h5>
+          <p class="card-text">{{ ann.content|safe }}</p>
+        </div>
+        <div class="card-footer bg-light text-muted d-flex justify-content-between align-items-center">
+          <small>Đăng bởi: <strong>{{ ann.author.username }}</strong> lúc {{ ann.timestamp.strftime('%H:%M %d-%m-%Y') }}</small>
+          {% if current_user.role == 'admin' %}
+          <form action="{{ url_for('admin.delete_announcement', announcement_id=ann.id) }}" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Xóa thông báo này?')">
+              <i class="fas fa-trash fa-xs"></i>
+            </button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="alert alert-info">⛪ Chưa có thông báo nào.</div>
+      {% endif %}
     </div>
+  </div>
+
+  <!-- Gửi phản hồi -->
+  <div class="col-lg-4">
+    <div class="feedback-section card shadow-sm bg-light">
+      <div class="card-body">
+        <h4 class="section-title mb-3"><i class="fas fa-paper-plane me-2"></i> Gửi phản hồi</h4>
+        <p class="text-muted small mb-3">Hãy gửi lời góp ý của bạn để xây dựng cộng đoàn tốt đẹp hơn.</p>
+        <form method="POST" action="">
+          {{ form.hidden_tag() }}
+          <fieldset class="form-group">
+            <div class="form-group">
+              {{ form.content.label(class="form-label sr-only") }}
+              {{ form.content(class="form-control", rows="4", placeholder="Nhập nội dung...") }}
+            </div>
+          </fieldset>
+          <div class="form-group mb-0">
+            {{ form.submit(class="btn btn-primary btn-block") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
 </div>
 {% endblock content %}

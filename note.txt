@@ -35,3 +35,12 @@ print(user)
 Thoát khỏi shell:
 Python
 exit()
+
+# upload lên github
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git push -u origin main
+
+#push lên pythonanywhere.com dự án của tôi
+git clone https://github.com/caobathien/student_manager.git

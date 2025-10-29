@@ -1,0 +1,198 @@
+/* 🌤️ PHONG CÁCH CHUNG */
+body {
+  background: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.97)),
+              url('https://source.unsplash.com/1600x900/?church,light,children,faith');
+  background-size: cover;
+  background-attachment: fixed;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+/* 🕊️ CONTAINER CHÍNH */
+.container {
+  background-color: rgba(255, 255, 255, 0.98);
+  border-radius: 16px;
+  padding: 40px 30px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #e3c567;
+  max-width: 800px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+.container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+}
+
+/* ✝️ TIÊU ĐỀ */
+h2 {
+  color: #2c3e50;
+  font-weight: 600;
+  text-align: center;
+  position: relative;
+}
+
+h2::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 3px;
+  background: #e3c567;
+  margin: 12px auto 0;
+  border-radius: 3px;
+}
+
+/* 🗂️ INPUT FILE */
+.form-group {
+  margin-top: 1.5rem;
+}
+
+label {
+  font-weight: 500;
+  color: #555;
+}
+
+input[type="file"] {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fdfdfd;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+input[type="file"]:hover {
+  border-color: #e3c567;
+}
+
+/* 📋 BẢNG XEM TRƯỚC */
+.table-responsive {
+  margin-top: 1rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  padding: 10px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #e3c567;
+  color: #333;
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+}
+
+td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+tr:hover {
+  background-color: rgba(227, 197, 103, 0.08);
+}
+
+/* 🕯️ NÚT */
+button,
+.btn {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+  padding: 10px 20px;
+}
+
+.btn-info {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+}
+.btn-info:hover {
+  background-color: #357ABD;
+}
+
+.btn-success {
+  background-color: #2ecc71;
+  border: none;
+  color: white;
+}
+.btn-success:hover {
+  background-color: #27ae60;
+}
+
+.btn-secondary {
+  background-color: #aaa;
+  border: none;
+  color: white;
+}
+.btn-secondary:hover {
+  background-color: #888;
+}
+
+.btn-link {
+  color: #2c3e50;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.btn-link:hover {
+  color: #d4af37;
+}
+
+/* 🪶 HIỆU ỨNG “ĐANG XEM TRƯỚC” */
+h5 {
+  font-weight: 600;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 20px;
+}
+
+h5::before {
+  content: "✝️ ";
+  color: #e3c567;
+}
+
+/* 🌈 RESPONSIVE DESIGN */
+
+/* Tablet */
+@media (max-width: 992px) {
+  .container {
+    padding: 30px 25px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+  }
+  .container {
+    padding: 25px 20px;
+  }
+  h2 {
+    font-size: 1.6rem;
+  }
+  .btn {
+    width: 100%;
+    margin-top: 8px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  h2 {
+    font-size: 1.4rem;
+  }
+  label {
+    font-size: 0.95rem;
+  }
+}

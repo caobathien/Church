@@ -1,36 +1,198 @@
-.page-title {
-    font-weight: 600;
+/* ✝️ FORM CHUNG PHONG CÁCH NHÀ THỜ THIÊN CHÚA GIÁO */
+:root {
+    --primary-color: #5f788a; /* xanh xám nhẹ */
+    --dark-color: #2c3e50;
+    --light-bg: #f9fafc;
+    --accent-gold: #d4af37;
+    --radius: 8px;
+    --shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* 📖 NỀN CHUNG */
+body {
+    background: linear-gradient(
+        rgba(255, 255, 255, 0.95),
+        rgba(255, 255, 255, 0.95)
+    ),
+    url("https://source.unsplash.com/1600x900/?church,light,cathedral");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: 'Poppins', sans-serif;
     color: var(--dark-color);
 }
 
+/* 🕊️ TIÊU ĐỀ TRANG */
+.page-title {
+    font-weight: 700;
+    color: var(--dark-color);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    position: relative;
+}
+
+.page-title::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: var(--accent-gold);
+    margin: 10px auto 0;
+    border-radius: 3px;
+}
+
+/* 📜 KHUNG FORM */
 .form-container {
     display: flex;
     justify-content: center;
-    padding-top: 1rem;
+    align-items: flex-start;
+    padding: 2.5rem 1rem;
 }
 
 .form-card {
     background-color: #ffffff;
     padding: 2rem 2.5rem;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius);
     width: 100%;
-    max-width: 600px;
-    border-top: 4px solid var(--primary-color);
+    max-width: 650px;
+    border-top: 5px solid var(--accent-gold);
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
+.form-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* 🕯️ TIÊU ĐỀ FORM */
 .form-title {
     text-align: center;
     font-weight: 600;
     color: var(--dark-color);
     margin-bottom: 2rem;
-    font-size: 1.7rem;
+    font-size: 1.6rem;
 }
 
-.btn-save { background-color: var(--primary-color); color: white; margin-right: 10px; }
-.btn-save:hover { background-color: var(--dark-color); color: white; }
-.btn-cancel { background-color: #6c757d; color: white; }
-.btn-cancel:hover { background-color: #5a6268; color: white; }
+/* 🪶 NHÃN & INPUT */
+.form-label {
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 0.4rem;
+}
 
-.table th { white-space: nowrap; }
-.table td:last-child { white-space: nowrap; } 
-.table button:disabled { cursor: not-allowed; }
+input[type="text"],
+input[type="email"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    color: #333;
+    background-color: #fdfdfd;
+    transition: all 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(95, 120, 138, 0.15);
+}
+
+/* 💾 NÚT */
+.btn-save {
+    background: linear-gradient(90deg, var(--primary-color), var(--dark-color));
+    color: white;
+    font-weight: 500;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
+    margin-right: 0.75rem;
+}
+
+.btn-save:hover {
+    background: linear-gradient(90deg, var(--dark-color), var(--primary-color));
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    font-weight: 500;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
+}
+
+/* 📊 BẢNG DỮ LIỆU */
+.table {
+    background-color: #fff;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.table th {
+    white-space: nowrap;
+    background-color: var(--dark-color);
+    color: #fff;
+    font-weight: 600;
+}
+
+.table td:last-child {
+    white-space: nowrap;
+}
+
+.table button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* 🕯️ HIỆU ỨNG NHẸ */
+.form-card::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    left: -40%;
+    width: 180%;
+    height: 180%;
+    background: radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.12),
+        transparent 70%
+    );
+    animation: gentle-glow 6s linear infinite;
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+@keyframes gentle-glow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 768px) {
+    .form-card {
+        padding: 1.5rem;
+    }
+    .form-title {
+        font-size: 1.4rem;
+    }
+    .btn-save, .btn-cancel {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}

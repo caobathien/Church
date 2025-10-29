@@ -2,120 +2,142 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/student_list.css') }}">
 
-<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-    <h1 class="page-title"><i class="fas fa-users mr-2"></i> Danh sách Sinh viên</h1>
-    <div class="action-buttons">
-        <div class="dropdown">
-            <button class="btn btn-info dropdown-toggle" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-file-export mr-1"></i> Xuất File
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="exportDropdown">
-                <a class="dropdown-item"
-                   href="{{ url_for('student.export_students', file_type='xlsx', search_term=search_form.search_term.data if search_form else '', class_filter=search_form.class_filter.data if search_form else '') }}">
-                   <i class="fas fa-file-excel mr-2 text-success"></i> Xuất Excel (.xlsx)
-                </a>
-                <a class="dropdown-item"
-                   href="{{ url_for('student.export_students', file_type='docx', search_term=search_form.search_term.data if search_form else '', class_filter=search_form.class_filter.data if search_form else '') }}">
-                   <i class="fas fa-file-word mr-2 text-primary"></i> Xuất Word (.docx)
-                </a>
-                <a href="{{ url_for('student.import_students') }}" class="btn btn-warning">
-                    <i class="fas fa-file-import"></i> Nhập từ File
-                </a>
+<div class="page-header text-center mb-5">
+  <h1 class="page-title"><i class="fas fa-users text-gold me-2"></i> Danh sách Thiếu Nhi</h1>
+  <p class="text-muted">Cùng nhau chăm sóc và đồng hành với các em trong hành trình đức tin ✝️</p>
+</div>
 
-            </div>
-        </div>
-        {% if current_user.role == 'admin' %}
-        <a href="{{ url_for('student.add_student') }}" class="btn btn-success">
-            <i class="fas fa-user-plus"></i> Thêm Sinh viên
-        </a>
-        {% endif %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <div class="dropdown">
+    <button class="btn btn-info dropdown-toggle" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-file-export me-1"></i> Xuất File
+    </button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="{{ url_for('student.export_students', file_type='xlsx') }}">
+        <i class="fas fa-file-excel text-success me-2"></i> Xuất Excel (.xlsx)
+      </a>
+      <a class="dropdown-item" href="{{ url_for('student.export_students', file_type='docx') }}">
+        <i class="fas fa-file-word text-primary me-2"></i> Xuất Word (.docx)
+      </a>
+      {% if current_user.role == 'admin' or current_user.is_leader() %}
+      <div class="dropdown-divider"></div>
+      <a href="{{ url_for('student.import_students') }}" class="dropdown-item text-warning">
+        <i class="fas fa-file-import me-2"></i> Nhập từ File
+      </a>
+      {% endif %}
     </div>
+  </div>
+
+  {% if current_user.role == 'admin' %}
+  <a href="{{ url_for('student.add_student') }}" class="btn btn-success">
+    <i class="fas fa-user-plus me-1"></i> Thêm Thiếu Nhi
+  </a>
+  {% elif current_user.is_leader() %}
+  <div class="dropdown">
+    <button class="btn btn-success dropdown-toggle" type="button" id="addStudentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-user-plus me-1"></i> Thêm Thiếu Nhi
+    </button>
+    <div class="dropdown-menu">
+      {% for class in current_user.assigned_classes %}
+      <a class="dropdown-item" href="{{ url_for('main_routes.add_student_to_class', class_id=class.id) }}">
+        <i class="fas fa-plus-circle me-2"></i> Thêm vào lớp {{ class.name }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 </div>
 
 <div class="card shadow-sm mb-4 search-filter-card">
-    <div class="card-body">
-        {% if search_form %} <form method="POST" action="{{ url_for('student.list_students') }}" class="form-inline">
-            {{ search_form.hidden_tag() }}
-            <div class="form-group mr-3 flex-grow-1">
-                {{ search_form.search_term.label(class="sr-only") }}
-                {{ search_form.search_term(class="form-control w-100", placeholder="Tìm theo Tên hoặc Mã SV...") }}
-            </div>
-            <div class="form-group mr-3">
-                {{ search_form.class_filter.label(class="mr-2") }}
-                {{ search_form.class_filter(class="form-control") }}
-            </div>
-            {{ search_form.submit_search(class="btn btn-primary") }}
-            <a href="{{ url_for('student.list_students') }}" class="btn btn-secondary ml-2" title="Xóa bộ lọc"><i class="fas fa-times"></i></a>
-        </form>
-        {% else %}
-            <p class="text-muted">Form tìm kiếm không khả dụng.</p>
-        {% endif %}
-    </div>
+  <div class="card-body">
+    {% if search_form %}
+    <form method="POST" action="{{ url_for('student.list_students') }}" class="form-inline flex-wrap">
+      {{ search_form.hidden_tag() }}
+      <div class="form-group flex-grow-1 mb-2 me-2">
+        {{ search_form.search_term(class="form-control w-100", placeholder="🔍 Tìm theo tên...") }}
+      </div>
+      <div class="form-group mb-2 me-2">
+        {{ search_form.class_filter(class="form-control") }}
+      </div>
+      {{ search_form.submit_search(class="btn btn-primary mb-2 me-2") }}
+      <a href="{{ url_for('student.list_students') }}" class="btn btn-secondary mb-2" title="Xóa bộ lọc">
+        <i class="fas fa-times"></i>
+      </a>
+    </form>
+    {% else %}
+    <p class="text-muted">Form tìm kiếm không khả dụng.</p>
+    {% endif %}
+  </div>
 </div>
 
 <div class="card shadow-sm">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Mã SV</th>
-                        <th>Họ và tên</th>
-                        <th>Ngày sinh</th>
-                        <th>Giới tính</th>
-                        <th>Lớp</th> <th>GPA</th>
-                        {% if current_user.role == 'admin' %}
-                        <th>Hành động</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for student in students %}
-                    <tr>
-                        <td>{{ student.student_code }}</td>
-                        <td>{{ student.full_name }}</td>
-                        <td>{{ student.date_of_birth.strftime('%d-%m-%Y') if student.date_of_birth else ''}}</td> <td>{{ student.gender }}</td>
-                        <td>{{ student.class_rel.name if student.class_rel else 'N/A' }}</td> <td>{{ student.gpa }}</td>
-                        {% if current_user.role == 'admin' %}
-                        <td>
-                            <a href="{{ url_for('student.update_student', student_id=student.id) }}" class="btn btn-secondary btn-sm" title="Sửa thông tin"><i class="fas fa-edit"></i></a>
-                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal{{ student.id }}" title="Xóa sinh viên">
-                               <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                        {% endif %}
-                    </tr>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-gold">
+          <tr>
+            <th>STT</th>
+            <th>Tên Thánh</th>
+            <th>Họ và tên</th>
+            <th>Ngày sinh</th>
+            <th>Giới tính</th>
+            <th>Lớp</th>
+            <th>SĐT Phụ huynh</th>
+            <th>Điểm miệng</th>
+            <th>Giữa kì 1</th>
+            <th>Cuối kì 1</th>
+            <th>Giữa kì 2</th>
+            <th>Cuối kì 2</th>
+            <th>Điểm tổng</th>
+            {% if current_user.role == 'admin' or current_user.is_leader() %}
+            <th>Hành động</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ student.ten_thanh or 'N/A' }}</td>
+            <td>{{ student.full_name }}</td>
+            <td>{{ student.date_of_birth.strftime('%d-%m-%Y') if student.date_of_birth else '' }}</td>
+            <td>{{ student.gender }}</td>
+            <td>{{ student.class_assigned.name if student.class_assigned else 'Chưa xếp lớp' }}</td>
+            <td>{{ student.sdt_phu_huynh or 'N/A' }}</td>
+            <td>{{ "%.1f"|format(student.diem_mieng or 0) }}</td>
+            <td>{{ "%.1f"|format(student.diem_giua_ki_1 or 0) }}</td>
+            <td>{{ "%.1f"|format(student.diem_cuoi_ki_1 or 0) }}</td>
+            <td>{{ "%.1f"|format(student.diem_giua_ki_2 or 0) }}</td>
+            <td>{{ "%.1f"|format(student.diem_cuoi_ki_2 or 0) }}</td>
+            <td><strong>{{ "%.2f"|format(student.diem_tong) }}</strong></td>
+            {% if current_user.role == 'admin' or current_user.is_leader() %}
+            <td>
+              <a href="{{ url_for('main_routes.edit_student', student_id=student.id) }}" class="btn btn-secondary btn-sm" title="Sửa"><i class="fas fa-edit"></i></a>
+              <form 
+                  action="{{ url_for('main_routes.delete_student', student_id=student.id) }}" 
+                  method="POST" 
+                  class="d-inline" 
+                  onsubmit="return confirm('Bạn có chắc chắn muốn xóa thiếu nhi {{ student.full_name|escape }}?');">
 
-                    <div class="modal fade" id="deleteModal{{ student.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ student.id }}" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteModalLabel{{ student.id }}">Xác nhận Xóa</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    Bạn có chắc chắn muốn xóa sinh viên "{{ student.full_name }}"?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                                    <form action="{{ url_for('student.delete_student', student_id=student.id) }}" method="POST">
-                                        <input class="btn btn-danger" type="submit" value="Xóa">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% else %}
-                     <tr>
-                        <td colspan="{{ 7 if current_user.role == 'admin' else 6 }}" class="text-center text-muted">Không tìm thấy sinh viên nào khớp hoặc chưa có sinh viên nào.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                <button type="submit" class="btn btn-danger btn-sm" title="Xóa">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </td>
+            {% endif %}
+          </tr>
+
+
+          {% else %}
+          <tr>
+            <td colspan="{{ 13 if current_user.role == 'admin' or current_user.is_leader() else 12 }}" class="text-center text-muted py-4">
+              ⛪ Không có dữ liệu thiếu nhi nào.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
 </div>
-
 {% endblock content %}

@@ -1,214 +1,84 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
-:root {
-    --primary-color: #5f788a; 
-    --dark-color: #2c3e50;    
-    --light-gray: #f8f9fa;  
-    --bs-body-color: #495057;  
-    --bs-body-bg: var(--light-gray);
-    --text-gradient: linear-gradient(90deg, var(--primary-color), var(--dark-color));
-    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
-    --border-radius: 0.375rem; 
-}
-
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--bs-body-bg);
-    color: var(--bs-body-color);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    font-size: 0.95rem; 
-    line-height: 1.6; 
+  background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.9)),
+              url('https://source.unsplash.com/1600x900/?cathedral,stained-glass');
+  background-size: cover;
+  background-attachment: fixed;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
 }
 
-a {
-    color: var(--primary-color);
-    text-decoration: none;
-    transition: color 0.2s ease-in-out;
+.welcome-section h2 {
+  font-weight: 600;
+  color: #2c3e50;
 }
 
-a:hover {
-    color: var(--dark-color);
-    text-decoration: none;
+.section-title {
+  font-weight: 600;
+  border-left: 4px solid #d4af37;
+  padding-left: 10px;
+  margin-bottom: 15px;
+  color: #444;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    color: var(--dark-color);
-    font-weight: 600; 
-    margin-bottom: 0.75rem; 
+.text-gold {
+  color: #d4af37;
 }
 
-.main-content {
-    flex: 1 0 auto; 
-    padding-top: 1.5rem; 
-    padding-bottom: 2rem;
+.quick-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+  border-left: 4px solid #e3c567;
+  background: #fff;
 }
 
-.custom-navbar {
-    background-color: var(--dark-color);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); 
-    padding-top: 0.8rem;
-    padding-bottom: 0.8rem;
+.quick-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.navbar-brand .logo {
-    vertical-align: middle;
+.announcement-card {
+  border: none;
+  border-top: 4px solid #e3c567;
+  background: rgba(255,255,255,0.9);
 }
 
-.brand-text {
-    font-weight: 700;
-    font-size: 1.25rem;
-    vertical-align: middle;
+.announcement-img {
+  height: 250px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
 }
 
-.nav-link {
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.75) !important; 
-    transition: color 0.2s ease;
-    padding: 0.5rem 1rem; 
-    border-radius: var(--border-radius); 
-    margin: 0 0.2rem;
+.feedback-section {
+  border-top: 4px solid #e3c567;
 }
 
-.nav-link:hover,
-.nav-link:focus {
-    color: rgba(255, 255, 255, 1) !important; 
-    background-color: rgba(255, 255, 255, 0.1); 
+.btn-primary {
+  background-color: #e3c567;
+  border: none;
+  color: #333;
 }
 
-.nav-item.active .nav-link {
-     color: rgba(255, 255, 255, 1) !important;
-     font-weight: 600;
+.btn-primary:hover {
+  background-color: #d4af37;
+  color: white;
 }
 
-.dropdown-menu {
-    border: none;
-    box-shadow: var(--shadow);
-    border-radius: var(--border-radius);
-    margin-top: 0.5rem; 
-    font-size: 0.9rem; 
+.alert-info {
+  background-color: rgba(230, 240, 255, 0.8);
+  border-left: 4px solid #3b5998;
 }
 
-.dropdown-item {
-    font-weight: 500;
-    padding: 0.6rem 1.25rem; 
-    transition: background-color 0.2s, color 0.2s;
-    color: var(--bs-body-color);
-    border-radius: 4px; 
-    margin: 0.2rem 0;
+.church-slider {
+  width: 100%;
+  max-height: 500px;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-.dropdown-item i {
-    margin-right: 0.75rem;
-    width: 20px;
-    opacity: 0.8; 
-    color: var(--primary-color);
-}
-
-.dropdown-item:hover,
-.dropdown-item:focus {
-    background-color: var(--light-gray);
-    color: var(--dark-color);
-}
-
-.dropdown-item.text-danger:hover {
-     background-color: #f8d7da; 
-     color: #721c24; 
-}
-.dropdown-item.text-danger:hover i {
-    color: #dc3545; 
-}
-
-.alert {
-    border-radius: var(--border-radius);
-    border-left: 5px solid; 
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.5rem; 
-}
-.alert-success { border-left-color: #198754; }
-.alert-danger { border-left-color: #dc3545; }
-.alert-warning { border-left-color: #ffc107; }
-.alert-info { border-left-color: #0dcaf0; }
-
-.card {
-    border: none;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
-    margin-bottom: 1.5rem; 
-    background-color: #ffffff; 
-}
-
-.card-header {
-    background-color: #fff;
-    border-bottom: 1px solid #dee2e6;
-    font-weight: 600;
-    color: var(--dark-color);
-    padding: 1rem 1.25rem; 
-}
-
-.table {
-    background-color: #fff;
-    box-shadow: var(--shadow-sm);
-    border-radius: var(--border-radius); 
-    overflow: hidden; 
-}
-
-.table thead th {
-    background-color: var(--dark-color);
-    color: #fff;
-    border-color: #455a64; 
-    font-weight: 600;
-    white-space: nowrap; 
-}
-
-.table-hover tbody tr:hover {
-    background-color: var(--light-gray); 
-}
-
-.table td, .table th {
-     vertical-align: middle; 
-     padding: 0.85rem; 
-}
-
-.btn {
-    font-weight: 500;
-    border-radius: var(--border-radius);
-    padding: 0.6rem 1.1rem; 
-    transition: all 0.2s ease-in-out;
-    box-shadow: var(--shadow-sm); 
-}
-.btn:hover {
-    transform: translateY(-2px); 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-}
-
-.btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); }
-.btn-primary:hover { background-color: var(--dark-color); border-color: var(--dark-color); }
-.btn-secondary { background-color: #6c757d; border-color: #6c757d; }
-.btn-secondary:hover { background-color: #5a6268; border-color: #545b62; }
-.btn-danger { background-color: #dc3545; border-color: #dc3545; }
-.btn-danger:hover { background-color: #bb2d3b; border-color: #b02a37; }
-
-
-/* ---- Footer ---- */
-.footer {
-    flex-shrink: 0;
-    background-color: #ffffff;
-    border-top: 1px solid #e9ecef;
-    font-weight: 500;
-    padding: 1rem 0; /* Giảm padding */
-    font-size: 0.85rem;
-    color: #6c757d; /* Màu chữ mờ */
-    margin-top: auto; /* Đảm bảo footer luôn ở dưới cùng */
-}
-
-.text-gradient {
-    background: var(--text-gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 700;
+.church-slider img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: opacity 1s ease-in-out;
 }

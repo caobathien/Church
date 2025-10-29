@@ -2,55 +2,80 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
 
-<div class="account-container">
-    <div class="row">
+<div class="account-container text-center mb-5">
+  <h2 class="page-title">👤 Tài khoản của bạn</h2>
+  <p class="text-muted lead">Hãy cập nhật thông tin để phục vụ cộng đoàn tốt hơn.</p>
+</div>
 
-        <div class="col-lg-6 mb-4"> <div class="account-card">
-                <h3 class="account-title"><i class="fas fa-user-edit"></i> Cập nhật thông tin</h3>
-                <form method="POST" action="">
-                    {{ update_form.hidden_tag() }}
-                    <fieldset class="form-group">
-                        <div class="form-group">
-                            {{ update_form.username.label(class="form-label") }}
-                            {{ update_form.username(class="form-control") }}
-                        </div>
-                        <div class="form-group">
-                            {{ update_form.email.label(class="form-label") }}
-                            {{ update_form.email(class="form-control") }}
-                        </div>
-                    </fieldset>
-                    <div class="form-group text-center mt-4">
-                        <input class="btn btn-save" type="submit" name="submit_update_info" value="Cập nhật">
-                    </div>
-                </form>
+<div class="account-wrapper container">
+
+  <!-- Phần avatar -->
+  <div class="avatar-container text-center mb-4">
+    {% if current_user.profile.avatar_filename %}
+      <img src="{{ url_for('static', filename='img/' + current_user.profile.avatar_filename) }}" alt="Avatar" class="avatar-img shadow">
+    {% else %}
+      <img src="https://source.unsplash.com/200x200/?christian,profile" alt="Avatar" class="avatar-img shadow">
+    {% endif %}
+    <h4 class="username mt-3">{{ current_user.username }}</h4>
+  </div>
+
+  <div class="row justify-content-center g-4">
+
+    <!-- Cập nhật thông tin -->
+    <div class="col-lg-5 col-md-6 col-sm-12">
+      <div class="account-card shadow-sm">
+        <h3 class="account-title"><i class="fas fa-user-edit me-2 text-gold"></i> Cập nhật thông tin</h3>
+        <form method="POST" action="" enctype="multipart/form-data">
+          {{ update_form.hidden_tag() }}
+          <fieldset class="form-group">
+            <div class="form-group mb-3">
+              {{ update_form.username.label(class="form-label fw-bold") }}
+              {{ update_form.username(class="form-control", placeholder="Nhập tên người dùng") }}
             </div>
-        </div>
-
-        <div class="col-lg-6 mb-4"> <div class="account-card">
-                <h3 class="account-title"><i class="fas fa-lock"></i> Đổi mật khẩu</h3>
-                <form method="POST" action="">
-                    {{ password_form.hidden_tag() }}
-                    <fieldset class="form-group">
-                        <div class="form-group">
-                            {{ password_form.current_password.label(class="form-label") }}
-                            {{ password_form.current_password(class="form-control") }}
-                        </div>
-                        <div class="form-group">
-                            {{ password_form.new_password.label(class="form-label") }}
-                            {{ password_form.new_password(class="form-control") }}
-                        </div>
-                        <div class="form-group">
-                            {{ password_form.confirm_password.label(class="form-label") }}
-                            {{ password_form.confirm_password(class="form-control") }}
-                        </div>
-                    </fieldset>
-                    <div class="form-group text-center mt-4">
-                         <input class="btn btn-save" type="submit" name="submit_change_password" value="Đổi mật khẩu">
-                    </div>
-                </form>
+            <div class="form-group mb-3">
+              {{ update_form.email.label(class="form-label fw-bold") }}
+              {{ update_form.email(class="form-control", placeholder="Nhập email") }}
             </div>
-        </div>
-
+            <div class="form-group mb-3">
+              {{ update_form.avatar.label(class="form-label fw-bold") }}
+              {{ update_form.avatar(class="form-control-file") }}
+              <small class="form-text text-muted">Chọn ảnh từ thiết bị của bạn (JPG, PNG, GIF)</small>
+            </div>
+          </fieldset>
+          <div class="form-group text-center mt-4">
+            <input class="btn btn-save" type="submit" name="submit_update_info" value="💾 Cập nhật">
+          </div>
+        </form>
+      </div>
     </div>
+
+    <!-- Đổi mật khẩu -->
+    <div class="col-lg-5 col-md-6 col-sm-12">
+      <div class="account-card shadow-sm">
+        <h3 class="account-title"><i class="fas fa-lock me-2 text-gold"></i> Đổi mật khẩu</h3>
+        <form method="POST" action="">
+          {{ password_form.hidden_tag() }}
+          <fieldset class="form-group">
+            <div class="form-group mb-3">
+              {{ password_form.current_password.label(class="form-label fw-bold") }}
+              {{ password_form.current_password(class="form-control", placeholder="Mật khẩu hiện tại") }}
+            </div>
+            <div class="form-group mb-3">
+              {{ password_form.new_password.label(class="form-label fw-bold") }}
+              {{ password_form.new_password(class="form-control", placeholder="Mật khẩu mới") }}
+            </div>
+            <div class="form-group mb-3">
+              {{ password_form.confirm_password.label(class="form-label fw-bold") }}
+              {{ password_form.confirm_password(class="form-control", placeholder="Nhập lại mật khẩu mới") }}
+            </div>
+          </fieldset>
+          <div class="form-group text-center mt-4">
+            <input class="btn btn-save" type="submit" name="submit_change_password" value="🔒 Đổi mật khẩu">
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
 </div>
 {% endblock content %}

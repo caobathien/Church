@@ -4,80 +4,139 @@
 
 <div class="student-form-container">
     <div class="student-form-card">
-        <h2 class="form-title">{{ legend }}</h2>
-        <form method="POST" action="">
-            {{ form.hidden_tag() }}
-            <fieldset class="form-group">
-
-                <div class="form-group">
-                    {{ form.student_code.label(class="form-label") }}
-                    {% if form.student_code.errors %}
-                        {{ form.student_code(class="form-control is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.student_code.errors %}<span>{{ error }}</span>{% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.student_code(class="form-control") }}
-                    {% endif %}
-                </div>
+        <h2 class="form-title">{{ legend }}</h2> <form method="POST" action="">
+            {{ form.hidden_tag() }} <fieldset class="form-group">
+                <legend class="fieldset-legend">Thông tin Thiếu Nhi</legend>
 
                 <div class="form-group">
                     {{ form.full_name.label(class="form-label") }}
                     {% if form.full_name.errors %}
                         {{ form.full_name(class="form-control is-invalid") }}
-                         <div class="invalid-feedback">
+                        <div class="invalid-feedback">
                             {% for error in form.full_name.errors %}<span>{{ error }}</span>{% endfor %}
                         </div>
                     {% else %}
-                         {{ form.full_name(class="form-control") }}
+                        {{ form.full_name(class="form-control") }}
                     {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.ten_thanh.label(class="form-label") }}
+                    {{ form.ten_thanh(class="form-control") }}
                 </div>
 
                 <div class="form-group">
                     {{ form.date_of_birth.label(class="form-label") }}
                     {{ form.date_of_birth(class="form-control", type="date") }}
-                     {% if form.date_of_birth.errors %}
+                    {% if form.date_of_birth.errors %}
                         <div class="invalid-feedback d-block">
-                             {% for error in form.date_of_birth.errors %}<span>{{ error }}</span>{% endfor %}
+                            {% for error in form.date_of_birth.errors %}<span>{{ error }}</span>{% endfor %}
                         </div>
                     {% endif %}
                 </div>
 
                 <div class="form-group">
                     {{ form.gender.label(class="form-label") }}
-                    {{ form.gender(class="form-control") }}
+                    {{ form.gender(class="form-control") }} 
                     {% if form.gender.errors %}
                         <div class="invalid-feedback d-block">
-                             {% for error in form.gender.errors %}<span>{{ error }}</span>{% endfor %}
+                            {% for error in form.gender.errors %}<span>{{ error }}</span>{% endfor %}
                         </div>
                     {% endif %}
                 </div>
+            </fieldset>
+
+            <fieldset class="form-group mt-4">
+                <legend class="fieldset-legend">Thông tin Phụ huynh (Tùy chọn)</legend>
+                
+                <div class="form-group">
+                    {{ form.ho_ten_bo.label(class="form-label") }}
+                    {{ form.ho_ten_bo(class="form-control") }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.ho_ten_me.label(class="form-label") }}
+                    {{ form.ho_ten_me(class="form-control") }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.sdt_phu_huynh.label(class="form-label") }}
+                    {{ form.sdt_phu_huynh(class="form-control") }}
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group mt-4">
+                <legend class="fieldset-legend">Thông tin Lớp học</legend>
 
                 <div class="form-group">
-                    {{ form.class_obj.label(class="form-label") }} {{ form.class_obj(class="form-control") }} {% if form.class_obj.errors %}
+                    {{ form.class_obj.label(class="form-label") }}
+                    {{ form.class_obj(class="form-control") }}
+                    {% if form.class_obj.errors %}
                         <div class="invalid-feedback d-block">
                             {% for error in form.class_obj.errors %}<span>{{ error }}</span>{% endfor %}
                         </div>
                     {% endif %}
                 </div>
+            </fieldset>
+
+            <fieldset class="form-group mt-4">
+                <legend class="fieldset-legend">Điểm số (Tùy chọn)</legend>
 
                 <div class="form-group">
-                    {{ form.gpa.label(class="form-label") }}
-                    {% if form.gpa.errors %}
-                        {{ form.gpa(class="form-control is-invalid") }}
-                        <div class="invalid-feedback">
-                             {% for error in form.gpa.errors %}<span>{{ error }}</span>{% endfor %}
+                    {{ form.diem_mieng.label(class="form-label") }}
+                    {{ form.diem_mieng(class="form-control", step="0.1", min="0", max="10") }}
+                    {% if form.diem_mieng.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.diem_mieng.errors %}<span>{{ error }}</span>{% endfor %}
                         </div>
-                    {% else %}
-                        {{ form.gpa(class="form-control") }}
                     {% endif %}
                 </div>
 
+                <div class="form-group">
+                    {{ form.diem_giua_ki_1.label(class="form-label") }}
+                    {{ form.diem_giua_ki_1(class="form-control", step="0.1", min="0", max="10") }}
+                    {% if form.diem_giua_ki_1.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.diem_giua_ki_1.errors %}<span>{{ error }}</span>{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.diem_cuoi_ki_1.label(class="form-label") }}
+                    {{ form.diem_cuoi_ki_1(class="form-control", step="0.1", min="0", max="10") }}
+                    {% if form.diem_cuoi_ki_1.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.diem_cuoi_ki_1.errors %}<span>{{ error }}</span>{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.diem_giua_ki_2.label(class="form-label") }}
+                    {{ form.diem_giua_ki_2(class="form-control", step="0.1", min="0", max="10") }}
+                    {% if form.diem_giua_ki_2.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.diem_giua_ki_2.errors %}<span>{{ error }}</span>{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.diem_cuoi_ki_2.label(class="form-label") }}
+                    {{ form.diem_cuoi_ki_2(class="form-control", step="0.1", min="0", max="10") }}
+                    {% if form.diem_cuoi_ki_2.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.diem_cuoi_ki_2.errors %}<span>{{ error }}</span>{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
             </fieldset>
 
             <div class="form-group mt-4 text-center">
                 {{ form.submit(class="btn btn-save") }}
-                <a href="{{ url_for('student.list_students') }}" class="btn btn-cancel">Hủy</a>
+                
+                <a href="{{ url_for('main_routes.home') }}" class="btn btn-cancel">Hủy</a>
             </div>
         </form>
     </div>

@@ -1,86 +1,147 @@
-:root {
-    --primary-color: #5f788a;
-    --dark-color: #2c3e50;
-    --light-gray: #f4f7f6;
-    --shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-}
-
-.register-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* ✝️ Tông nền gợi cảm hứng nhà thờ */
+body.register-body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(120deg, rgba(245, 247, 250, 0.96), rgba(233, 236, 239, 0.95)),
+                url("https://source.unsplash.com/1600x900/?cathedral,church,stained-glass,light");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     min-height: 100vh;
-    padding: 2rem 1rem;
 }
 
+/* 🌤️ Thẻ đăng ký */
 .register-card {
-    width: 100%;
-    max-width: 480px;
-    background: #ffffff;
-    padding: 2.5rem 3rem;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    border-top: 5px solid var(--primary-color);
-    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-.register-title {
-    font-weight: 700;
+/* Hiệu ứng ánh sáng quay nhẹ – tượng trưng cho ánh sáng nhà thờ */
+.register-card::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 70%);
+    animation: rotateLight 12s linear infinite;
+    z-index: 0;
+}
+
+@keyframes rotateLight {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.register-card * {
+    position: relative;
+    z-index: 1;
+}
+
+/* ✨ Input focus và lỗi */
+.form-control.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+/* 🌾 Nhãn phụ, liên kết */
+.form-text {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.form-text a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.form-text a:hover {
     color: var(--dark-color);
-    margin-bottom: 2rem;
-    font-size: 1.75rem;
+    text-decoration: underline;
 }
 
-.form-group {
-    text-align: left;
-    margin-bottom: 1.25rem;
-}
-
-.form-label {
-    font-weight: 600;
-    color: #555;
-    margin-bottom: 0.5rem;
-}
-
-.form-control {
-    height: 50px;
-    padding: 0.75rem 1.1rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    font-family: 'Poppins', sans-serif; 
-}
-
-.form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(95, 120, 138, 0.2);
-    outline: none;
-}
-
-.btn-register {
+/* 💠 Nút phụ */
+.btn-secondary {
     width: 100%;
     padding: 0.9rem;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
-    background: var(--dark-color); 
-    color: white;
+    background: #6c757d;
+    color: #fff;
     border: none;
     border-radius: 8px;
-    transition: all 0.2s;
-    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.btn-register:hover {
-    background: var(--primary-color); 
+.btn-secondary:hover {
+    background: #5a6268;
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3);
-    color: white;
 }
 
-/* Card footer (same as login) */
+/* 🕊️ Footer đăng ký */
 .register-footer {
-    text-align: center;
-    margin-top: 2rem;
-    border-top: 1px solid #eee;
-    padding-top: 1.5rem;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.register-footer a {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.register-footer a:hover {
+    color: var(--dark-color);
+}
+
+/* 🌸 Liên kết đăng nhập */
+.login-link {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.login-link a {
+    color: var(--primary-color);
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.login-link a:hover {
+    color: var(--dark-color);
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+    .register-card {
+        padding: 2rem;
+    }
+
+    .register-title {
+        font-size: 1.5rem;
+    }
+
+    .form-control {
+        height: 46px;
+    }
+
+    .btn-register {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-card {
+        padding: 1.75rem;
+    }
+
+    .register-title {
+        font-size: 1.4rem;
+    }
+
+    .btn-register, .btn-secondary {
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
 }

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student_list.css') }}">
+
+<div class="page-header text-center mb-5">
+    <h1 class="page-title"><i class="fas fa-chalkboard-teacher text-gold me-2"></i> Lớp: {{ class_obj.name }}</h1>
+    <p class="text-muted">Danh sách thiếu nhi trong lớp ✝️</p>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div class="dropdown">
+        <button class="btn btn-info dropdown-toggle" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-file-export me-1"></i> Xuất File
+        </button>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" href="{{ url_for('student.export_students', class_filter=class_obj.id, file_type='xlsx') }}">
+                <i class="fas fa-file-excel text-success me-2"></i> Xuất Excel (.xlsx)
+            </a>
+            <a class="dropdown-item" href="{{ url_for('student.export_students', class_filter=class_obj.id, file_type='docx') }}">
+                <i class="fas fa-file-word text-primary me-2"></i> Xuất Word (.docx)
+            </a>
+        </div>
+    </div>
+
+    <div>
+        <a href="{{ url_for('attendance.attendance_history', class_id=class_obj.id) }}" class="btn btn-info me-2">
+            <i class="fas fa-history me-1"></i> Lịch sử Điểm Danh
+        </a>
+        {% if current_user.is_admin() or current_user.is_leader() %}
+        <a href="{{ url_for('attendance.take_attendance', class_id=class_obj.id) }}" class="btn btn-warning me-2">
+            <i class="fas fa-calendar-check me-1"></i> Điểm Danh
+        </a>
+        <a href="{{ url_for('main_routes.add_student_to_class', class_id=class_obj.id) }}" class="btn btn-success">
+            <i class="fas fa-user-plus me-1"></i> Thêm Thiếu Nhi
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-gold">
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên Thánh</th>
+                        <th>Họ và tên</th>
+                        <th>Ngày sinh</th>
+                        <th>Giới tính</th>
+                        <th>SĐT Phụ huynh</th>
+                        <th>Điểm miệng</th>
+                        <th>Giữa kì 1</th>
+                        <th>Cuối kì 1</th>
+                        <th>Giữa kì 2</th>
+                        <th>Cuối kì 2</th>
+                        <th>Điểm tổng</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ student.ten_thanh or 'N/A' }}</td>
+                        <td>{{ student.full_name }}</td>
+                        <td>{{ student.date_of_birth.strftime('%d-%m-%Y') if student.date_of_birth else '' }}</td>
+                        <td>{{ student.gender }}</td>
+                        <td>{{ student.sdt_phu_huynh or 'N/A' }}</td>
+                        <td>{{ "%.1f"|format(student.diem_mieng or 0) }}</td>
+                        <td>{{ "%.1f"|format(student.diem_giua_ki_1 or 0) }}</td>
+                        <td>{{ "%.1f"|format(student.diem_cuoi_ki_1 or 0) }}</td>
+                        <td>{{ "%.1f"|format(student.diem_giua_ki_2 or 0) }}</td>
+                        <td>{{ "%.1f"|format(student.diem_cuoi_ki_2 or 0) }}</td>
+                        <td><strong>{{ "%.2f"|format(student.diem_tong) }}</strong></td>
+                        <td>
+                            <a href="{{ url_for('main_routes.edit_student', student_id=student.id) }}" class="btn btn-secondary btn-sm" title="Sửa"><i class="fas fa-edit"></i></a>
+                            <form action="{{ url_for('main_routes.delete_student', student_id=student.id) }}" 
+                            method="POST" 
+                            class="d-inline" 
+                            onsubmit='return confirm("Bạn có chắc chắn muốn xóa thiếu nhi {{ student.full_name }}?");'>
+
+                                <button type="submit" class="btn btn-danger btn-sm" title="Xóa">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="13" class="text-center text-muted py-4">
+                            ⛪ Chưa có thiếu nhi nào trong lớp.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,99 +1,142 @@
-:root {
-    --primary-color: #5f788a;
-    --dark-color: #2c3e50;
-    --light-gray: #f4f7f6;
-    --shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-}
-
+/* 🌅 Hiệu ứng ánh sáng nhà thờ */
 .auth-body {
+    background: linear-gradient(120deg, rgba(245, 247, 250, 0.95), rgba(233, 236, 239, 0.95)),
+                url("https://source.unsplash.com/1600x900/?cathedral,stained-glass,light");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
 }
 
-.login-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 2rem 1rem;
-}
-
+/* 🕊️ Thẻ đăng nhập */
 .login-card {
-    width: 100%;
-    max-width: 480px;
-    background: #ffffff;
-    padding: 2.5rem 3rem;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    border-top: 5px solid var(--primary-color);
-    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-/* Logo */
-.login-logo {
-    max-width: 100px;
-    height: auto;
-    margin: 0 auto 1.5rem auto;
-    display: block;
+.login-card::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 70%);
+    animation: rotateLight 10s linear infinite;
+    z-index: 0;
 }
 
-.login-title {
-    font-weight: 700;
-    color: var(--dark-color);
-    margin-bottom: 2rem;
-    font-size: 1.75rem;
+@keyframes rotateLight {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-/* Form */
-.form-group {
-    text-align: left;
-    margin-bottom: 1.25rem;
+.login-card * {
+    position: relative;
+    z-index: 1;
 }
 
+/* 🪶 Nhãn và liên kết */
 .form-label {
     font-weight: 600;
-    color: #555;
-    margin-bottom: 0.5rem;
+    color: var(--dark-color);
 }
 
-.form-control {
-    height: 50px;
-    padding: 0.75rem 1.1rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    font-family: 'Poppins', sans-serif;
+.form-text {
+    font-size: 0.9rem;
+    color: #666;
+    text-align: right;
 }
 
-.form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(95, 120, 138, 0.2);
-    outline: none;
+.form-text a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
 }
 
-.btn-login {
+.form-text a:hover {
+    color: var(--dark-color);
+}
+
+/* 🪞 Input lỗi */
+.form-control.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+/* 🔑 Nút phụ */
+.btn-secondary {
     width: 100%;
     padding: 0.9rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    background: var(--dark-color);
-    color: white;
+    background: #6c757d;
+    color: #fff;
     border: none;
     border-radius: 8px;
-    transition: all 0.2s;
-    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
 }
 
-.btn-login:hover {
-    background: var(--primary-color);
+.btn-secondary:hover {
+    background: #5a6268;
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3);
-    color: white;
 }
 
+/* 🕯️ Footer */
 .login-footer {
-    text-align: center;
-    margin-top: 2rem;
-    border-top: 1px solid #eee;
-    padding-top: 1.5rem;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.login-footer a {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.login-footer a:hover {
+    color: var(--dark-color);
+    text-decoration: underline;
+}
+
+/* ✨ Đăng ký */
+.register-link {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.register-link a {
+    color: var(--primary-color);
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.register-link a:hover {
+    color: var(--dark-color);
+}
+
+/* 🪔 Responsive (mobile & tablet) */
+@media (max-width: 768px) {
+    .login-card {
+        padding: 2rem;
+    }
+    .login-title {
+        font-size: 1.5rem;
+    }
+    .form-control {
+        height: 46px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 1.75rem;
+    }
+    .login-title {
+        font-size: 1.4rem;
+    }
+    .btn-login, .btn-secondary {
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
 }

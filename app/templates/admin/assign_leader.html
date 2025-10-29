@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Phân công Huynh Trưởng & Dự Trưởng vào Lớp</h1>
+
+    <div class="row">
+        <!-- Danh sách Lớp -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Danh sách Lớp học</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for class in classes %}
+                        <div class="list-group-item">
+                            <h6>{{ class.name }}</h6>
+                            <small class="text-muted">Huynh Trưởng được phân công:</small>
+                            <ul class="list-unstyled">
+                                {% for leader in class.leaders %}
+                                <li>
+                                    <form action="{{ url_for('admin.assign_leader') }}" method="POST" class="d-inline">
+                                        <input type="hidden" name="class_id" value="{{ class.id }}">
+                                        <input type="hidden" name="leader_id" value="{{ leader.id }}">
+                                        <input type="hidden" name="action" value="unassign">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Gỡ {{ leader.profile.ho_ten }}</button>
+                                    </form>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh sách Huynh Trưởng -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Danh sách Huynh Trưởng & Dự Trưởng</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for leader in leaders %}
+                        <div class="list-group-item">
+                            <h6>{{ leader.profile.ho_ten }}</h6>
+                            <small class="text-muted">{{ 'Huynh Trưởng' if leader.role == 'huynh_truong' else 'Dự Trưởng' }}</small>
+                            <br>
+                            <small class="text-muted">Lớp được phân công:</small>
+                            <ul class="list-unstyled">
+                                {% for class in leader.assigned_classes %}
+                                <li>{{ class.name }}</li>
+                                {% endfor %}
+                            </ul>
+                            <form action="{{ url_for('admin.assign_leader') }}" method="POST" class="mt-2">
+                                <input type="hidden" name="leader_id" value="{{ leader.id }}">
+                                <input type="hidden" name="action" value="assign">
+                                <div class="form-group">
+                                    <select name="class_id" class="form-control form-control-sm" required>
+                                        <option value="">Chọn lớp để phân công</option>
+                                        {% for class in classes %}
+                                        <option value="{{ class.id }}">{{ class.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-primary">Phân công</button>
+                            </form>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

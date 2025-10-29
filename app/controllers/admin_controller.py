@@ -1,59 +1,205 @@
 import os
-from flask import Blueprint, current_app, render_template, flash, redirect, url_for
+import secrets
+from flask import Blueprint, current_app, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 from app import db
 from app.decorators import admin_required
 from app.models.announcement import Announcement
 from app.models.feedback import Feedback
-from app.forms import AnnouncementForm
-import secrets
-from werkzeug.utils import secure_filename
+from app.models.user import User
+from app.models.user_profile import UserProfile
+from app.models.student import Student
+from app.models.class_model import ClassModel
+from app.models.leader import Leader
+from app.forms import AnnouncementForm, AddLeaderForm, AdminUpdateUserForm
+from PIL import Image
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-# --- HÀM HỖ TRỢ LƯU ẢNH ---
+# --- HÀM HỖ TRỢ XỬ LÝ ẢNH (Tối ưu) ---
+
 def save_picture(form_picture):
-    # Tạo một tên file ngẫu nhiên để tránh trùng lặp
+    """Hàm tối ưu và lưu ảnh (Resize + Tạo tên ngẫu nhiên)."""
     random_hex = secrets.token_hex(8)
-    # Lấy đuôi file (ví dụ: .jpg)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    # Lấy đường dẫn tuyệt đối đến thư mục uploads
     picture_path = os.path.join(current_app.config['UPLOAD_FOLDER'], picture_fn)
+
+    # (Cải tiến) Resize ảnh về kích thước chuẩn (ví dụ: 1200px)
+    output_size = (1200, 1200)
+    try:
+        i = Image.open(form_picture)
+        i.thumbnail(output_size)
+        i.save(picture_path)
+    except Exception as e:
+        flash(f'Lỗi xử lý ảnh: {e}', 'danger')
+        return None
     
-    # Lưu ảnh
-    form_picture.save(picture_path)
+    return picture_fn
+
+def delete_picture(filename):
+    """Hàm hỗ trợ xóa file ảnh cũ một cách an toàn."""
+    if not filename:
+        return
     
-    return picture_fn # Trả về tên file mới
+    picture_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+    try:
+        if os.path.exists(picture_path):
+            os.remove(picture_path)
+    except Exception as e:
+        print(f"Error deleting file {picture_path}: {e}") # Ghi log lỗi
+
+# --- TRANG CHỦ ADMIN ---
+
+@admin_bp.route('/')
+@login_required
+@admin_required
+def dashboard():
+    """Trang chủ của Admin, hiển thị thông tin tổng quan."""
+    user_count = User.query.count()
+    student_count = Student.query.count()
+    class_count = ClassModel.query.count()
+    feedback_count = Feedback.query.count()
+    
+    return render_template('admin/dashboard.html', 
+                           title='Admin Dashboard',
+                           user_count=user_count,
+                           student_count=student_count,
+                           class_count=class_count,
+                           feedback_count=feedback_count)
+
+# --- QUẢN LÝ HUYNH TRƯỞNG & DỰ TRƯỞNG (CRUD) ---
+
+@admin_bp.route('/leader/add', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def add_leader():
+    """Controller xử lý logic thêm mới Huynh/Dự Trưởng."""
+    form = AddLeaderForm()
+    
+    if form.validate_on_submit():
+        # 1. Tạo User (với mật khẩu đã hash và vai trò)
+        new_user = User(
+            username=form.username.data,
+            email=form.email.data,
+            password=form.password.data, 
+            role=form.role.data 
+        )
+        
+        # 2. Tạo UserProfile (thông tin cá nhân)
+        new_profile = UserProfile(
+            ho_ten=form.ho_ten.data,
+            ten_thanh=form.ten_thanh.data,
+            sdt=form.sdt.data,
+            dia_chi=form.dia_chi.data
+        )
+        
+        # 3. Liên kết 1-1
+        new_user.profile = new_profile
+        
+        try:
+            db.session.add(new_user) 
+            db.session.commit()
+            flash('Đã tạo tài khoản thành công!', 'success')
+            return redirect(url_for('admin.dashboard'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Lỗi! Không thể tạo tài khoản. (Username/Email có thể đã tồn tại).', 'danger')
+
+    return render_template('admin/add_leader_form.html', 
+                           title='Thêm Huynh/Dự Trưởng', 
+                           form=form)
+
+# --- QUẢN LÝ LỚP HỌC & PHÂN CÔNG ---
+
+@admin_bp.route('/assign_leader', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def assign_leader_to_class():
+    """Trang phân công Huynh trưởng vào lớp."""
+        
+    # Lấy danh sách Huynh/Dự trưởng và các Lớp
+    leaders = User.query.filter(User.role.in_(['huynh_truong', 'du_truong'])).all()
+    classes = ClassModel.query.all()
+    
+    return render_template('admin/assign_leader.html', 
+                           title='Phân công Lớp', 
+                           leaders=leaders, 
+                           classes=classes)
+                           # form=form)
+
+# --- QUẢN LÝ THÔNG BÁO (CRUD - Hoàn thiện) ---
 
 @admin_bp.route('/announcement/new', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def create_announcement():
+    """Tạo thông báo mới (Create)."""
     form = AnnouncementForm()
     if form.validate_on_submit():
         image_file = None
-        # 3. KIỂM TRA NẾU CÓ FILE TẢI LÊN
         if form.image.data:
             image_file = save_picture(form.image.data)
             
-        # 4. LƯU TÊN ẢNH VÀO DATABASE
         announcement = Announcement(
             title=form.title.data, 
             content=form.content.data, 
             author=current_user,
-            image_filename=image_file # <-- Thêm tên file vào
+            image_filename=image_file
         )
         db.session.add(announcement)
         db.session.commit()
         flash('Thông báo đã được đăng!', 'success')
         return redirect(url_for('main.home'))
-    return render_template('admin/announcement_form.html', title='Tạo thông báo', form=form)
+    return render_template('admin/announcement_form.html', title='Tạo thông báo', form=form, legend='Đăng thông báo mới')
+
+@admin_bp.route('/announcement/<int:announcement_id>/edit', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def update_announcement(announcement_id):
+    """Sửa thông báo (Update)."""
+    ann = Announcement.query.get_or_404(announcement_id)
+    form = AnnouncementForm()
+    
+    if form.validate_on_submit():
+        if form.image.data:
+            delete_picture(ann.image_filename) # Xóa ảnh cũ
+            ann.image_filename = save_picture(form.image.data) # Lưu ảnh mới
+            
+        ann.title = form.title.data
+        ann.content = form.content.data
+        db.session.commit()
+        flash('Đã cập nhật thông báo!', 'success')
+        return redirect(url_for('main.home'))
+        
+    elif request.method == 'GET':
+        form.title.data = ann.title
+        form.content.data = ann.content
+        
+    return render_template('admin/announcement_form.html', title='Sửa thông báo', form=form, legend=f'Sửa: {ann.title}')
+
+@admin_bp.route('/announcement/<int:announcement_id>/delete', methods=['POST'])
+@login_required
+@admin_required
+def delete_announcement(announcement_id):
+    """Xóa thông báo (Delete) - Đã sửa lỗi rò rỉ file."""
+    ann = Announcement.query.get_or_404(announcement_id)
+    
+    # (Cải tiến) Xóa file ảnh liên quan
+    delete_picture(ann.image_filename)
+    
+    db.session.delete(ann)
+    db.session.commit()
+    flash('Thông báo đã được xóa thành công.', 'success')
+    return redirect(url_for('main.home'))
+
+# --- QUẢN LÝ PHẢN HỒI ---
 
 @admin_bp.route('/feedback')
 @login_required
 @admin_required
 def view_feedback():
+    """Xem danh sách phản hồi."""
     feedbacks = Feedback.query.order_by(Feedback.timestamp.desc()).all()
     return render_template('admin/feedback_list.html', title='Danh sách Phản hồi', feedbacks=feedbacks)
 
@@ -61,19 +207,46 @@ def view_feedback():
 @login_required
 @admin_required
 def delete_feedback(feedback_id):
+    """Xóa phản hồi."""
     feedback = Feedback.query.get_or_404(feedback_id)
     db.session.delete(feedback)
     db.session.commit()
     flash('Phản hồi đã được xóa.', 'success')
     return redirect(url_for('admin.view_feedback'))
 
-@admin_bp.route('/announcement/<int:announcement_id>/delete', methods=['POST'])
+# --- QUẢN LÝ PHÂN CÔNG HUYNH TRƯỞNG VÀO LỚP ---
+
+@admin_bp.route('/assign-leader', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def delete_announcement(announcement_id):
-    """Xử lý việc xóa một thông báo."""
-    ann = Announcement.query.get_or_404(announcement_id)
-    db.session.delete(ann)
-    db.session.commit()
-    flash('Thông báo đã được xóa thành công.', 'success')
-    return redirect(url_for('main.home'))
+def assign_leader():
+    """Trang phân công Huynh trưởng/Dự trưởng vào lớp."""
+    if request.method == 'POST':
+        class_id = request.form.get('class_id')
+        leader_id = request.form.get('leader_id')
+        action = request.form.get('action')
+
+        class_obj = ClassModel.query.get_or_404(class_id)
+        user = User.query.get_or_404(leader_id)
+
+        if action == 'assign':
+            if user not in class_obj.leaders:
+                class_obj.leaders.append(user)
+                db.session.commit()
+                flash(f'Đã phân công {user.profile.ho_ten} vào lớp {class_obj.name}.', 'success')
+            else:
+                flash(f'{user.profile.ho_ten} đã được phân công vào lớp {class_obj.name}.', 'warning')
+        elif action == 'unassign':
+            if user in class_obj.leaders:
+                class_obj.leaders.remove(user)
+                db.session.commit()
+                flash(f'Đã gỡ phân công {user.profile.ho_ten} khỏi lớp {class_obj.name}.', 'success')
+            else:
+                flash(f'{user.profile.ho_ten} chưa được phân công vào lớp {class_obj.name}.', 'warning')
+
+        return redirect(url_for('admin.assign_leader'))
+
+    # GET request: Hiển thị danh sách lớp và Huynh trưởng
+    classes = ClassModel.query.all()
+    leaders = User.query.filter(User.role.in_(['huynh_truong', 'du_truong'])).all()
+    return render_template('admin/assign_leader.html', title='Phân công Huynh Trưởng', classes=classes, leaders=leaders)

@@ -19,4 +19,4 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'instance', 'students.db')
     
-    UPLOAD_FOLDER = os.path.join(basedir, 'app', 'static', 'uploads')
+    UPLOAD_FOLDER = os.path.join(basedir, 'app', 'static', 'img')
