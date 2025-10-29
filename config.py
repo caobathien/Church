@@ -16,8 +16,11 @@ class Config:
     
     # Cấu hình đường dẫn tới database SQLite
     # Sử dụng os.path.join để đảm bảo tương thích trên các hệ điều hành
-    SQLALCHEMY_DATABASE_URI = (
-        'mysql+pymysql://ThienCao:Thien0111@ThienCao.mysql.pythonanywhere-services.com/ThienCao$ChurchDB'
-    )
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'instance', 'students.db')
+
+    # SQLALCHEMY_DATABASE_URI = (
+    #     'mysql+pymysql://ThienCao:Thien0111@ThienCao.mysql.pythonanywhere-services.com/ThienCao$ChurchDB'
+    # )
+    # SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = os.path.join(basedir, 'app', 'static', 'img')

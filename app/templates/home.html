@@ -82,7 +82,6 @@
         <div class="church-slider">
           <img id="churchImage" src="{{ url_for('static', filename='img/church2.png') }}" alt="Ảnh nhà thờ">
         </div>
-
         {% endif %}
         <div class="card-body">
           <h5 class="card-title text-gold">{{ ann.title }}</h5>
@@ -102,6 +101,16 @@
       {% endfor %}
       {% else %}
       <div class="alert alert-info">⛪ Chưa có thông báo nào.</div>
+      <!-- Default church slider when no announcements -->
+      <div class="card mb-4 announcement-card shadow-sm">
+        <div class="church-slider">
+          <img id="churchImage" src="{{ url_for('static', filename='img/church2.png') }}" alt="Ảnh nhà thờ">
+        </div>
+        <div class="card-body">
+          <h5 class="card-title text-gold">Chào mừng đến với Giáo Xứ</h5>
+          <p class="card-text">Nguyện xin ân sủng và bình an của Thiên Chúa luôn ở cùng cộng đoàn chúng ta.</p>
+        </div>
+      </div>
       {% endif %}
     </div>
   </div>

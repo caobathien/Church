@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, request
+from flask import Blueprint, abort, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 from app import db
 from app.models.attendance import Attendance
@@ -12,7 +12,7 @@ attendance_bp = Blueprint('attendance', __name__)
 
 @attendance_bp.route('/class/<int:class_id>/attendance', methods=['GET', 'POST'])
 @login_required
-@permission_required_for_class
+@permission_required_for_class()
 def take_attendance(class_id):
     """
     Trang điểm danh cho một lớp.
@@ -62,12 +62,12 @@ def take_attendance(class_id):
 
 @attendance_bp.route('/class/<int:class_id>/attendance/<date_str>', methods=['GET', 'POST'])
 @login_required
-@permission_required_for_class
+@permission_required_for_class(allow_guest=True)
 def edit_attendance(class_id, date_str):
     """
     Trang chỉnh sửa điểm danh cho một ngày cụ thể.
     """
-    if current_user.role == 'guest':
+    if current_user.role == 'guest' and request.method == 'POST':
         flash('Bạn không có quyền chỉnh sửa điểm danh.', 'danger')
         abort(403)
     class_obj = ClassModel.query.get_or_404(class_id)
@@ -116,7 +116,7 @@ def edit_attendance(class_id, date_str):
 
 @attendance_bp.route('/class/<int:class_id>/attendance/history')
 @login_required
-@permission_required_for_class
+@permission_required_for_class(allow_guest=True)
 def attendance_history(class_id):
     """
     Trang xem lịch sử điểm danh của lớp.

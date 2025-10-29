@@ -14,36 +14,30 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def permission_required_for_class(f):
-    @wraps(f)
-    def decorated_function(class_id, *args, **kwargs):
-        if not current_user.is_authenticated:
-            abort(401)
+def permission_required_for_class(allow_guest=False):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(class_id, *args, **kwargs):
+            if not current_user.is_authenticated:
+                abort(401)
 
-        # Admin có toàn quyền
-        if current_user.is_admin():
-            return f(class_id, *args, **kwargs)
+            # Admin có toàn quyền
+            if current_user.is_admin():
+                return f(class_id, *args, **kwargs)
 
-        # Guest có thể xem lớp nhưng không chỉnh sửa
-        if current_user.role == 'guest':
-            return f(class_id, *args, **kwargs)
+            # Huynh trưởng và Dự trưởng có thể truy cập tất cả lớp
+            if current_user.is_leader():
+                return f(class_id, *args, **kwargs)
 
-        # Chỉ Huynh trưởng và Dự trưởng mới được phép điểm danh
-        if not current_user.is_leader():
-            flash('Chỉ Huynh trưởng và Dự trưởng mới được phép điểm danh.', 'danger')
+            # Guest có thể xem nếu được phép
+            if allow_guest and current_user.role == 'guest':
+                return f(class_id, *args, **kwargs)
+
+            # Nếu không phải admin, leader, hoặc guest được phép, cấm
+            flash('Bạn không có quyền truy cập.', 'danger')
             abort(403)
-
-        # Kiểm tra xem user có phải là HT/DT và có được gán cho lớp này không
-        is_assigned = current_user.assigned_classes.filter_by(id=class_id).first()
-
-        if is_assigned:
-            # Nếu được gán, cho phép truy cập
-            return f(class_id, *args, **kwargs)
-
-        # Nếu không, cấm
-        flash('Bạn không có quyền điểm danh lớp này.', 'danger')
-        abort(403)
-    return decorated_function
+        return decorated_function
+    return decorator
 
 def permission_required_for_student(f):
     @wraps(f)

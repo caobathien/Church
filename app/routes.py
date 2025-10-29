@@ -21,17 +21,17 @@ def home():
 
 @main.route('/class/<int:class_id>')
 @login_required
-@permission_required_for_class  # <-- ÁP DỤNG LUẬT KIỂM TRA QUYỀN
+@permission_required_for_class(allow_guest=True)  # <-- ÁP DỤNG LUẬT KIỂM TRA QUYỀN, cho phép guest xem
 def view_class(class_id):
     """Trang xem chi tiết một lớp, danh sách thiếu nhi, điểm số..."""
     return class_controller.view_details(class_id)
 
 @main.route('/class/<int:class_id>/add-student', methods=['GET', 'POST'])
 @login_required
-@permission_required_for_class  # <-- KIỂM TRA QUYỀN TRÊN LỚP
+@permission_required_for_class()  # <-- KIỂM TRA QUYỀN TRÊN LỚP
 def add_student_to_class(class_id):
     """Thêm một thiếu nhi mới vào lớp cụ thể này."""
-    return student_controller.add_student(class_id) # Controller giờ cần nhận class_id
+    return student_controller.add_student(class_id=class_id) # Controller giờ cần nhận class_id
 
 @main.route('/student/<int:student_id>/edit', methods=['GET', 'POST'])
 @login_required

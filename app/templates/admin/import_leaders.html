@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Nhập Huynh Trưởng & Dự Trưởng từ File</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Chọn File để Nhập</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Chọn file Excel (.xlsx) hoặc CSV (.csv)</label>
+                            <input type="file" class="form-control" id="file" name="file" accept=".xlsx,.csv" required>
+                            <div class="form-text">
+                                File phải có các cột: Username, Email, Vai trò, Họ tên, Tên Thánh (tùy chọn), SĐT (tùy chọn), Địa chỉ (tùy chọn)<br>
+                                <strong>Lưu ý:</strong> Mật khẩu mặc định sẽ là "123456" - hãy yêu cầu người dùng đổi mật khẩu sau khi đăng nhập lần đầu.
+                            </div>
+                        </div>
+                        <button type="submit" name="preview" class="btn btn-primary">Xem Trước</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if preview %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Xem Trước Dữ Liệu</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        {{ preview|safe }}
+                    </div>
+                    <form method="POST" class="mt-3">
+                        <button type="submit" name="confirm" class="btn btn-success">Xác Nhận Nhập Dữ Liệu</button>
+                        <a href="{{ url_for('leader.import_leaders') }}" class="btn btn-secondary">Hủy</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <a href="{{ url_for('leader.list_leaders') }}" class="btn btn-secondary">Quay Lại Danh Sách</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

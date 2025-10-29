@@ -33,6 +33,10 @@
         <a href="{{ url_for('main_routes.add_student_to_class', class_id=class_obj.id) }}" class="btn btn-success">
             <i class="fas fa-user-plus me-1"></i> Thêm Thiếu Nhi
         </a>
+        {% elif current_user.role == 'guest' %}
+        <a href="{{ url_for('attendance.attendance_history', class_id=class_obj.id) }}" class="btn btn-info me-2">
+            <i class="fas fa-history me-1"></i> Xem Điểm Danh
+        </a>
         {% endif %}
     </div>
 </div>
@@ -74,6 +78,7 @@
                         <td>{{ "%.1f"|format(student.diem_cuoi_ki_2 or 0) }}</td>
                         <td><strong>{{ "%.2f"|format(student.diem_tong) }}</strong></td>
                         <td>
+                            {% if current_user.is_admin() or current_user.is_leader() %}
                             <a href="{{ url_for('main_routes.edit_student', student_id=student.id) }}" class="btn btn-secondary btn-sm" title="Sửa"><i class="fas fa-edit"></i></a>
                             <form action="{{ url_for('main_routes.delete_student', student_id=student.id) }}" 
                             method="POST" 
@@ -84,6 +89,7 @@
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
+                            {% endif %}
                         </td>
                     </tr>
                     {% else %}

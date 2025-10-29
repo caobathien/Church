@@ -402,6 +402,7 @@ def allowed_file(filename):
 @student_bp.route('/students/import', methods=['GET', 'POST'])
 @login_required
 def import_students():
+    # Chỉ admin và leader mới được import từ file
     if current_user.role == 'guest':
         flash('Bạn không có quyền nhập dữ liệu từ file.', 'danger')
         return redirect(url_for('student.list_students'))

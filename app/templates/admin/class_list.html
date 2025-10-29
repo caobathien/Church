@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
     <h1 class="mb-4">Quản lý Lớp học</h1>
+    {% if current_user.is_admin() %}
     <a href="{{ url_for('class_admin.add_class') }}" class="btn btn-primary mb-3">Thêm Lớp học</a>
     <a href="{{ url_for('admin.assign_leader') }}" class="btn btn-info mb-3">Phân công Huynh Trưởng</a>
+    {% endif %}
     <div class="table-responsive card-shadow">
         <table class="table table-striped table-hover">
             <thead class="thead-dark">
@@ -37,6 +39,7 @@
                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa lớp học này?')">Xóa</button>
                         </form>
                         {% endif %}
+                        <a href="{{ url_for('main_routes.view_class', class_id=class.id) }}" class="btn btn-info btn-sm">Xem Chi Tiết</a>
                     </td>
                 </tr>
                 {% endfor %}

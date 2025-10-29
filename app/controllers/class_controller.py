@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app import db
 # (SỬA) Import đúng tên Model
 from app.models.class_model import ClassModel 
@@ -11,7 +11,6 @@ class_bp = Blueprint('class_admin', __name__, url_prefix='/admin/classes')
 
 @class_bp.route('/')
 @login_required
-@admin_required
 def list_classes():
     """Hiển thị danh sách các lớp."""
     # (SỬA) Dùng ClassModel
@@ -28,6 +27,21 @@ def list_classes():
         attendance_summary[class_obj.id] = {
             'attendance_days': attendance_days
         }
+
+    # Kiểm tra quyền: Admin có thể xem tất cả, Leader chỉ xem lớp được phân công, Guest chỉ xem
+    if current_user.is_admin():
+        # Admin xem tất cả
+        pass
+    elif current_user.role in ('huynh_truong', 'du_truong'):
+        # Leader chỉ xem lớp được phân công
+        assigned_class_ids = [c.id for c in current_user.assigned_classes.all()]
+        classes = [c for c in classes if c.id in assigned_class_ids]
+    elif current_user.role == 'guest':
+        # Guest có thể xem tất cả lớp
+        pass
+    else:
+        flash('Bạn không có quyền truy cập trang này.', 'danger')
+        return redirect(url_for('main_routes.home'))
 
     # (SỬA) Sửa đường dẫn template cho nhất quán
     return render_template('admin/class_list.html', title='Quản lý Lớp học', classes=classes, attendance_summary=attendance_summary)
