@@ -122,11 +122,21 @@ def assign_leader_to_class():
     leaders = User.query.filter(User.role.in_(['huynh_truong', 'du_truong'])).all()
     classes = ClassModel.query.all()
     
-    return render_template('admin/assign_leader.html', 
-                           title='Phân công Lớp', 
-                           leaders=leaders, 
+    return render_template('admin/assign_leader.html',
+                           title='Phân công Lớp',
+                           leaders=leaders,
                            classes=classes)
                            # form=form)
+
+# --- QUẢN LÝ LỚP HỌC ---
+
+@admin_bp.route('/classes')
+@login_required
+@admin_required
+def list_classes():
+    """Trang danh sách các lớp học."""
+    classes = ClassModel.query.all()
+    return render_template('admin/class_list.html', title='Quản lý Lớp học', classes=classes)
 
 # --- QUẢN LÝ THÔNG BÁO (CRUD - Hoàn thiện) ---
 

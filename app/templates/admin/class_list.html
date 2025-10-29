@@ -2,6 +2,7 @@
 {% block content %}
     <h1 class="mb-4">Quản lý Lớp học</h1>
     <a href="{{ url_for('class_admin.add_class') }}" class="btn btn-primary mb-3">Thêm Lớp học</a>
+    <a href="{{ url_for('admin.assign_leader') }}" class="btn btn-info mb-3">Phân công Huynh Trưởng</a>
     <div class="table-responsive card-shadow">
         <table class="table table-striped table-hover">
             <thead class="thead-dark">

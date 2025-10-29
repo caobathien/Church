@@ -44,3 +44,104 @@ git push -u origin main
 
 #push lên pythonanywhere.com dự án của tôi
 git clone https://github.com/caobathien/student_manager.git
+
+#uploadDB
+🧩 Bước 1. Cài thư viện
+
+Kích hoạt virtualenv (nếu chưa):
+
+source ~/Church/venv/bin/activate
+
+
+Sau đó cài:
+
+pip install flask-migrate
+
+⚙️ Bước 2. Thêm cấu hình vào app/__init__.py
+
+Mở file app/__init__.py và thêm dòng sau ở đầu phần import:
+
+from flask_migrate import Migrate
+
+
+Sau khi khởi tạo db = SQLAlchemy(), thêm:
+
+migrate = Migrate()
+
+
+Trong hàm create_app(), ngay sau db.init_app(app):
+
+db.init_app(app)
+migrate.init_app(app, db)
+
+
+Ví dụ:
+
+db.init_app(app)
+migrate.init_app(app, db)
+bcrypt.init_app(app)
+login_manager.init_app(app)
+
+🧱 Bước 3. Tạo file chạy lệnh migrate
+
+Tạo file mới ở thư mục gốc project, đặt tên là manage.py:
+
+from app import create_app, db
+from flask_migrate import MigrateCommand, Migrate
+from flask_script import Manager
+
+app = create_app()
+migrate = Migrate(app, db)
+manager = Manager(app)
+
+@manager.command
+def hello():
+    print("Flask-Migrate is ready!")
+
+if __name__ == "__main__":
+    manager.run()
+
+
+(Nếu bạn không muốn dùng flask_script, có thể dùng CLI của Flask luôn — mình sẽ chỉ ở bước 4).
+
+🧭 Bước 4. Khởi tạo migration folder (chỉ cần 1 lần)
+
+Chạy trong terminal (vẫn trong môi trường ảo):
+
+cd ~/Church
+flask db init
+
+
+Lúc này sẽ xuất hiện thư mục migrations/ trong project của bạn.
+
+🔁 Bước 5. Khi bạn thay đổi model
+
+Giả sử bạn thêm 1 cột mới trong app/models/student.py, ví dụ:
+
+new_field = db.Column(db.String(100))
+
+
+Thì bạn chỉ cần chạy:
+
+flask db migrate -m "add new_field to student"
+flask db upgrade
+
+
+✅ Flask-Migrate sẽ tự động tạo script SQL và áp dụng vào MySQL
+➡️ Không mất dữ liệu cũ, cực kỳ an toàn.
+
+🧹 Bước 6. (Tùy chọn) — Kiểm tra log migration
+
+Nếu bạn muốn xem lịch sử các lần migrate:
+
+flask db history
+
+🎯 Kiểm tra hoạt động
+
+Sau khi chạy xong flask db upgrade, hãy mở MySQL console:
+
+USE ThienCao$ChurchDB;
+DESCRIBE student;
+
+
+→ Bạn sẽ thấy cột mới vừa được thêm, mà dữ liệu cũ vẫn nguyên vẹn 💪
