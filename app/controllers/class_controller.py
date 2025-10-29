@@ -11,6 +11,7 @@ class_bp = Blueprint('class_admin', __name__, url_prefix='/admin/classes')
 
 @class_bp.route('/')
 @login_required
+@admin_required
 def list_classes():
     """Hiển thị danh sách các lớp."""
     # (SỬA) Dùng ClassModel

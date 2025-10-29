@@ -3,7 +3,6 @@ from flask_login import login_required, current_user
 from app import db
 from app.models.announcement import Announcement
 from app.models.feedback import Feedback
-from app.models.leader import Leader
 from app.models.user import User
 from app.models.user_profile import UserProfile
 from app.forms import FeedbackForm
@@ -24,9 +23,8 @@ def home():
     # Lấy tất cả thông báo, sắp xếp mới nhất lên đầu
     announcements = Announcement.query.order_by(Announcement.timestamp.desc()).all()
 
-    # Lấy danh sách Huynh Trưởng & Dự Trưởng
-    leaders = Leader.query.join(User).join(UserProfile).all()
 
+    leaders = User.query.filter(User.role.in_(['huynh_truong', 'du_truong'])).join(UserProfile).all()
     # Lấy thống kê điểm danh cho tất cả lớp
     from app.models.class_model import ClassModel
     from app.models.attendance import Attendance

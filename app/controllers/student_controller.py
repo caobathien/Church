@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from app import db
 from app.models.student import Student
 from app.models.class_model import ClassModel as Class
-from app.forms import StudentForm, SearchStudentForm
+from app.forms import StudentForm, SearchStudentForm, ScoreForm
 from app.decorators import admin_required
 from sqlalchemy import or_
 from flask import make_response
@@ -89,6 +89,10 @@ def list_students():
 @login_required
 def add_student(class_id=None):
     """Thêm một thiếu nhi mới."""
+    # Guest không được thêm thiếu nhi
+    if current_user.role == 'guest':
+        flash('Bạn không có quyền thêm thiếu nhi.', 'danger')
+        abort(403)
     # Nếu có class_id, kiểm tra quyền
     if class_id:
         # Áp dụng decorator logic manually since we can't decorate here
@@ -151,7 +155,10 @@ def update_student(student_id):
     """Cập nhật thông tin thiếu nhi."""
     student = Student.query.get_or_404(student_id)
 
-    # Kiểm tra quyền: Admin hoặc Huynh trưởng của lớp
+    # Kiểm tra quyền: Admin hoặc Huynh trưởng của lớp, Guest không được sửa
+    if current_user.role == 'guest':
+        flash('Bạn không có quyền sửa thông tin thiếu nhi.', 'danger')
+        abort(403)
     if not current_user.is_admin():
         if not student.class_id:
             flash('Thiếu nhi chưa được xếp lớp.', 'danger')
@@ -198,7 +205,10 @@ def delete_student(student_id):
     """Xóa thiếu nhi."""
     student = Student.query.get_or_404(student_id)
 
-    # Kiểm tra quyền: Admin hoặc Huynh trưởng của lớp
+    # Kiểm tra quyền: Admin hoặc Huynh trưởng của lớp, Guest không được xóa
+    if current_user.role == 'guest':
+        flash('Bạn không có quyền xóa thiếu nhi.', 'danger')
+        abort(403)
     if not current_user.is_admin():
         if not student.class_id:
             flash('Thiếu nhi chưa được xếp lớp.', 'danger')
@@ -215,6 +225,42 @@ def delete_student(student_id):
         return redirect(url_for('student.list_students'))
     else:
         return redirect(url_for('main_routes.view_class', class_id=student.class_id))
+
+@student_bp.route("/student/<int:student_id>/scores", methods=['GET', 'POST'])
+@login_required
+def manage_scores(student_id):
+    """Trang nhập/sửa điểm cho một thiếu nhi."""
+    student = Student.query.get_or_404(student_id)
+
+    # Kiểm tra quyền: Admin hoặc Huynh trưởng của lớp, Guest không được sửa điểm
+    if current_user.role == 'guest':
+        flash('Bạn không có quyền sửa điểm thiếu nhi.', 'danger')
+        abort(403)
+    if not current_user.is_admin():
+        if not student.class_id:
+            flash('Thiếu nhi chưa được xếp lớp.', 'danger')
+            abort(403)
+        is_assigned = current_user.assigned_classes.filter_by(id=student.class_id).first()
+        if not is_assigned:
+            flash('Bạn không có quyền quản lý điểm của thiếu nhi này.', 'danger')
+            abort(403)
+
+    form = ScoreForm(obj=student)
+
+    if form.validate_on_submit():
+        student.diem_mieng = form.diem_mieng.data
+        student.diem_giua_ki_1 = form.diem_giua_ki_1.data
+        student.diem_cuoi_ki_1 = form.diem_cuoi_ki_1.data
+        student.diem_giua_ki_2 = form.diem_giua_ki_2.data
+        student.diem_cuoi_ki_2 = form.diem_cuoi_ki_2.data
+        db.session.commit()
+        flash('Điểm của thiếu nhi đã được cập nhật!', 'success')
+        if current_user.is_admin():
+            return redirect(url_for('student.list_students'))
+        else:
+            return redirect(url_for('main_routes.view_class', class_id=student.class_id))
+
+    return render_template('student_scores.html', title=f'Quản lý điểm - {student.full_name}', form=form, student=student)
 
 @student_bp.route("/students/export/<file_type>") # Route mới nhận file_type
 @login_required

@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 from app import db
-from app.models.leader import Leader
 from app.models.user import User
 from app.models.user_profile import UserProfile
 from app.forms import AddLeaderForm
@@ -13,7 +12,7 @@ leader_bp = Blueprint('leader', __name__, url_prefix='/admin/leaders')
 @login_required
 @admin_required
 def list_leaders():
-    leaders = Leader.query.join(User).join(UserProfile).all()
+    leaders = User.query.filter(User.role.in_(['huynh_truong', 'du_truong'])).join(UserProfile).all()
     return render_template('admin/leader_list.html', title='Quản lý Huynh Trưởng & Dự Trưởng', leaders=leaders)
 
 @leader_bp.route('/add', methods=['GET', 'POST'])
@@ -38,12 +37,8 @@ def add_leader():
         )
         new_user.profile = new_profile
         
-        # Create Leader
-        new_leader = Leader(user=new_user, position=form.role.data)
-        
         try:
             db.session.add(new_user)
-            db.session.add(new_leader)
             db.session.commit()
             flash('Đã thêm Huynh Trưởng thành công!', 'success')
             return redirect(url_for('leader.list_leaders'))
@@ -52,12 +47,11 @@ def add_leader():
             flash(f'Lỗi: {e}', 'danger')
     return render_template('admin/add_leader_form.html', title='Thêm Huynh Trưởng & Dự Trưởng', form=form)
 
-@leader_bp.route('/<int:leader_id>/edit', methods=['GET', 'POST'])
+@leader_bp.route('/<int:user_id>/edit', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def edit_leader(leader_id):
-    leader = Leader.query.get_or_404(leader_id)
-    user = leader.user
+def edit_leader(user_id):
+    user = User.query.get_or_404(user_id)
     form = AddLeaderForm(obj=user)
     if form.validate_on_submit():
         user.username = form.username.data
@@ -67,7 +61,6 @@ def edit_leader(leader_id):
         user.profile.ten_thanh = form.ten_thanh.data
         user.profile.sdt = form.sdt.data
         user.profile.dia_chi = form.dia_chi.data
-        leader.position = form.role.data
         db.session.commit()
         flash('Đã cập nhật Huynh Trưởng!', 'success')
         return redirect(url_for('leader.list_leaders'))
@@ -81,14 +74,12 @@ def edit_leader(leader_id):
         form.dia_chi.data = user.profile.dia_chi
     return render_template('admin/add_leader_form.html', title='Sửa Huynh Trưởng & Dự Trưởng', form=form)
 
-@leader_bp.route('/<int:leader_id>/delete', methods=['POST'])
+@leader_bp.route('/<int:user_id>/delete', methods=['POST'])
 @login_required
 @admin_required
-def delete_leader(leader_id):
-    leader = Leader.query.get_or_404(leader_id)
-    user = leader.user
+def delete_leader(user_id):
+    user = User.query.get_or_404(user_id)
     try:
-        db.session.delete(leader)
         db.session.delete(user)
         db.session.commit()
         flash('Đã xóa Huynh Trưởng!', 'success')

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">{{ legend }}</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Thông tin thiếu nhi -->
+                    <div class="mb-4">
+                        <h5>Thông tin thiếu nhi</h5>
+                        <p><strong>Tên Thánh:</strong> {{ student.ten_thanh or 'N/A' }}</p>
+                        <p><strong>Họ và tên:</strong> {{ student.full_name }}</p>
+                        <p><strong>Lớp:</strong> {{ student.class_assigned.name if student.class_assigned else 'Chưa xếp lớp' }}</p>
+                        <p><strong>Điểm tổng hiện tại:</strong> {{ "%.2f"|format(student.diem_tong) }}</p>
+                    </div>
+
+                    <!-- Form nhập điểm -->
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">Nhập điểm số</legend>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.diem_mieng.label(class="form-control-label") }}
+                                        {{ form.diem_mieng(class="form-control") }}
+                                        {% if form.diem_mieng.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.diem_mieng.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.diem_giua_ki_1.label(class="form-control-label") }}
+                                        {{ form.diem_giua_ki_1(class="form-control") }}
+                                        {% if form.diem_giua_ki_1.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.diem_giua_ki_1.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.diem_cuoi_ki_1.label(class="form-control-label") }}
+                                        {{ form.diem_cuoi_ki_1(class="form-control") }}
+                                        {% if form.diem_cuoi_ki_1.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.diem_cuoi_ki_1.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.diem_giua_ki_2.label(class="form-control-label") }}
+                                        {{ form.diem_giua_ki_2(class="form-control") }}
+                                        {% if form.diem_giua_ki_2.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.diem_giua_ki_2.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.diem_cuoi_ki_2.label(class="form-control-label") }}
+                                        {{ form.diem_cuoi_ki_2(class="form-control") }}
+                                        {% if form.diem_cuoi_ki_2.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.diem_cuoi_ki_2.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                        <div class="form-group">
+                            {{ form.submit(class="btn btn-primary") }}
+                            <a href="{{ url_for('main_routes.view_class', class_id=student.class_id) if student.class_id else url_for('student.list_students') }}" class="btn btn-secondary">Quay lại</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -10,8 +10,7 @@ from app.models.user import User
 from app.models.user_profile import UserProfile
 from app.models.student import Student
 from app.models.class_model import ClassModel
-from app.models.leader import Leader
-from app.forms import AnnouncementForm, AddLeaderForm, AdminUpdateUserForm
+from app.forms import AnnouncementForm, AdminUpdateUserForm
 from PIL import Image
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -70,45 +69,7 @@ def dashboard():
 
 # --- QUẢN LÝ HUYNH TRƯỞNG & DỰ TRƯỞNG (CRUD) ---
 
-@admin_bp.route('/leader/add', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def add_leader():
-    """Controller xử lý logic thêm mới Huynh/Dự Trưởng."""
-    form = AddLeaderForm()
-    
-    if form.validate_on_submit():
-        # 1. Tạo User (với mật khẩu đã hash và vai trò)
-        new_user = User(
-            username=form.username.data,
-            email=form.email.data,
-            password=form.password.data, 
-            role=form.role.data 
-        )
-        
-        # 2. Tạo UserProfile (thông tin cá nhân)
-        new_profile = UserProfile(
-            ho_ten=form.ho_ten.data,
-            ten_thanh=form.ten_thanh.data,
-            sdt=form.sdt.data,
-            dia_chi=form.dia_chi.data
-        )
-        
-        # 3. Liên kết 1-1
-        new_user.profile = new_profile
-        
-        try:
-            db.session.add(new_user) 
-            db.session.commit()
-            flash('Đã tạo tài khoản thành công!', 'success')
-            return redirect(url_for('admin.dashboard'))
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Lỗi! Không thể tạo tài khoản. (Username/Email có thể đã tồn tại).', 'danger')
-
-    return render_template('admin/add_leader_form.html', 
-                           title='Thêm Huynh/Dự Trưởng', 
-                           form=form)
+# Removed duplicate add_leader function, using the one in leader_controller.py instead
 
 # --- QUẢN LÝ LỚP HỌC & PHÂN CÔNG ---
 

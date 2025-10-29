@@ -24,6 +24,10 @@ def permission_required_for_class(f):
         if current_user.is_admin():
             return f(class_id, *args, **kwargs)
 
+        # Guest có thể xem lớp nhưng không chỉnh sửa
+        if current_user.role == 'guest':
+            return f(class_id, *args, **kwargs)
+
         # Chỉ Huynh trưởng và Dự trưởng mới được phép điểm danh
         if not current_user.is_leader():
             flash('Chỉ Huynh trưởng và Dự trưởng mới được phép điểm danh.', 'danger')
@@ -49,6 +53,10 @@ def permission_required_for_student(f):
 
         # Admin có toàn quyền
         if current_user.is_admin():
+            return f(student_id, *args, **kwargs)
+
+        # Guest có thể xem học sinh nhưng không chỉnh sửa
+        if current_user.role == 'guest':
             return f(student_id, *args, **kwargs)
 
         # Tìm lớp của Thiếu Nhi

@@ -16,8 +16,11 @@ attendance_bp = Blueprint('attendance', __name__)
 def take_attendance(class_id):
     """
     Trang điểm danh cho một lớp.
-    Chỉ Admin và Huynh trưởng của lớp đó mới được truy cập.
+    Chỉ Admin và Huynh trưởng của lớp đó mới được truy cập. Guest chỉ xem.
     """
+    if current_user.role == 'guest':
+        flash('Bạn không có quyền điểm danh.', 'danger')
+        abort(403)
     class_obj = ClassModel.query.get_or_404(class_id)
     students = class_obj.students.all()
 
@@ -64,6 +67,9 @@ def edit_attendance(class_id, date_str):
     """
     Trang chỉnh sửa điểm danh cho một ngày cụ thể.
     """
+    if current_user.role == 'guest':
+        flash('Bạn không có quyền chỉnh sửa điểm danh.', 'danger')
+        abort(403)
     class_obj = ClassModel.query.get_or_404(class_id)
     students = class_obj.students.all()
 

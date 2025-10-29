@@ -12,6 +12,22 @@ from app.models.class_model import ClassModel
 from wtforms_sqlalchemy.fields import QuerySelectField
 from datetime import datetime
 
+class ScoreForm(FlaskForm):
+    """
+    Form để nhập/sửa điểm cho một thiếu nhi.
+    """
+    diem_mieng = FloatField('Điểm miệng (0-10)',
+                           validators=[Optional(), NumberRange(min=0, max=10)])
+    diem_giua_ki_1 = FloatField('Điểm giữa kì 1 (0-10)',
+                               validators=[Optional(), NumberRange(min=0, max=10)])
+    diem_cuoi_ki_1 = FloatField('Điểm cuối kì 1 (0-10)',
+                               validators=[Optional(), NumberRange(min=0, max=10)])
+    diem_giua_ki_2 = FloatField('Điểm giữa kì 2 (0-10)',
+                               validators=[Optional(), NumberRange(min=0, max=10)])
+    diem_cuoi_ki_2 = FloatField('Điểm cuối kì 2 (0-10)',
+                               validators=[Optional(), NumberRange(min=0, max=10)])
+    submit = SubmitField('Lưu điểm')
+
 class RegistrationForm(FlaskForm):
     username = StringField('Tên đăng nhập', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
