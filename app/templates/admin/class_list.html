@@ -22,7 +22,9 @@
                 <tr>
                     <td>{{ class.id }}</td>
                     <td>{{ class.name }}</td>
-                    <td>{{ class.leaders.count() }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.view_class_leaders', class_id=class.id) }}" class="btn btn-link btn-sm">{{ class.leaders.count() }}</a>
+                    </td>
                     <td>{{ class.students.count() }}</td>
                     <td>
                         {% set attendance_days = attendance_summary.get(class.id, {}).attendance_days or 0 %}

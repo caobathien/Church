@@ -52,10 +52,4 @@ def create_app(config_class=Config):
     app.register_blueprint(leader_bp) # Đăng ký blueprint cho Leader
     app.register_blueprint(attendance_bp) # Đăng ký blueprint cho Attendance
     app.register_blueprint(routes_main_bp, name='main_routes')
-
-    with app.app_context():
-        from app.models import user, student, announcement, feedback, class_model, user_profile, leader
-
-        db.create_all()
-
     return app

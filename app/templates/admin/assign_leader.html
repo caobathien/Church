@@ -1,5 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.toggle-leaders').forEach(button => {
+        button.addEventListener('click', function() {
+            const classId = this.getAttribute('data-class-id');
+            const leadersList = document.getElementById('leaders-' + classId);
+            const icon = this.querySelector('i');
+
+            if (leadersList.style.display === 'none') {
+                leadersList.style.display = 'block';
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                leadersList.style.display = 'none';
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        });
+    });
+});
+</script>
 <div class="container mt-4">
     <h1 class="mb-4">Phân công Huynh Trưởng & Dự Trưởng vào Lớp</h1>
     <a href="{{ url_for('admin.list_classes') }}" class="btn btn-secondary mb-3">Quay lại Danh sách Lớp</a>
@@ -15,20 +36,28 @@
                     <div class="list-group">
                         {% for class in classes %}
                         <div class="list-group-item">
-                            <h6>{{ class.name }}</h6>
-                            <small class="text-muted">Huynh Trưởng được phân công:</small>
-                            <ul class="list-unstyled">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">{{ class.name }}</h6>
+                                <button class="btn btn-sm btn-outline-secondary toggle-leaders" data-class-id="{{ class.id }}">
+                                    <i class="fas fa-chevron-down"></i> Huynh Trưởng ({{ class.leaders.count() }})
+                                </button>
+                            </div>
+                            <div class="leaders-list mt-2" id="leaders-{{ class.id }}" style="display: none;">
                                 {% for leader in class.leaders %}
-                                <li>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span>{{ leader.profile.ho_ten }} ({{ 'HT' if leader.role == 'huynh_truong' else 'DT' }})</span>
                                     <form action="{{ url_for('admin.assign_leader') }}" method="POST" class="d-inline">
                                         <input type="hidden" name="class_id" value="{{ class.id }}">
                                         <input type="hidden" name="leader_id" value="{{ leader.id }}">
                                         <input type="hidden" name="action" value="unassign">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">Gỡ {{ leader.profile.ho_ten }}</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Gỡ phân công">Gỡ</button>
                                     </form>
-                                </li>
+                                </div>
                                 {% endfor %}
-                            </ul>
+                                {% if not class.leaders %}
+                                <small class="text-muted">Chưa có Huynh trưởng nào.</small>
+                                {% endif %}
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
@@ -40,7 +69,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>Danh sách Huynh Trưởng & Dự Trưởng</h5>
+                    <h5>Danh sách Huynh Trưởng & Dự Trưởng chưa được phân công</h5>
                 </div>
                 <div class="card-body">
                     <div class="list-group">

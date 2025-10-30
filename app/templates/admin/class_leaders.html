@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Huynh Trưởng & Dự Trưởng Lớp {{ class_obj.name }}</h1>
+    <a href="{{ url_for('admin.list_classes') }}" class="btn btn-secondary mb-3">Quay lại Danh sách Lớp</a>
+    <a href="{{ url_for('admin.assign_leader') }}" class="btn btn-primary mb-3">Phân công Huynh Trưởng</a>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Danh sách Huynh Trưởng & Dự Trưởng</h5>
+        </div>
+        <div class="card-body">
+            {% if leaders %}
+            <div class="list-group">
+                {% for leader in leaders %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6>{{ leader.profile.ho_ten }}</h6>
+                        <small class="text-muted">{{ 'Huynh Trưởng' if leader.role == 'huynh_truong' else 'Dự Trưởng' }} - {{ leader.email }}</small>
+                    </div>
+                    <form action="{{ url_for('admin.assign_leader') }}" method="POST" class="d-inline">
+                        <input type="hidden" name="class_id" value="{{ class_obj.id }}">
+                        <input type="hidden" name="leader_id" value="{{ leader.id }}">
+                        <input type="hidden" name="action" value="unassign">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Gỡ phân công</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted">Chưa có Huynh Trưởng nào được phân công vào lớp này.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

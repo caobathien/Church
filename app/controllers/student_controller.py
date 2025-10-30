@@ -38,8 +38,8 @@ def list_students():
         classes = Class.query.filter(Class.id.in_(assigned_class_ids)).order_by(Class.name).all()
         search_form.class_filter.choices = [('', 'Tất cả các lớp')] + [(str(c.id), c.name) for c in classes]
 
-    # Bắt đầu query, join với Class để có thể sắp xếp/lọc theo tên lớp
-    query = Student.query.join(Class).order_by(Class.name, Student.full_name)
+    # Bắt đầu query, left join với Class để có thể sắp xếp/lọc theo tên lớp
+    query = Student.query.outerjoin(Class).order_by(Class.name, Student.full_name)
 
     # Nếu không phải admin và không phải guest, chỉ lấy học sinh trong các lớp được phân công
     if not current_user.is_admin() and current_user.role != 'guest':
@@ -271,7 +271,7 @@ def export_students(file_type):
     search_term = request.args.get('search_term', None)
     class_id_filter = request.args.get('class_filter', None)
 
-    query = Student.query.join(Class).order_by(Class.name, Student.full_name)
+    query = Student.query.outerjoin(Class).order_by(Class.name, Student.full_name)
 
     if search_term:
         search_pattern = f"%{search_term}%"
@@ -459,35 +459,71 @@ def import_students():
                 df.columns = df.columns.str.strip().str.lower()
 
                 added_count = 0
+                skipped_count = 0
+                errors = []
 
-                for _, row in df.iterrows():
-                    ten_thanh = str(row.get("tên thánh", "")).strip()
-                    full_name = str(row.get("họ và tên", "")).strip()
-                    date_of_birth_str = str(row.get("ngày sinh", "")).strip()
-                    gender = str(row.get("giới tính", "")).strip()
-                    class_name = str(row.get("lớp", "")).strip()
-                    ho_ten_bo = str(row.get("họ tên bố", "")).strip()
-                    ho_ten_me = str(row.get("họ tên mẹ", "")).strip()
-                    sdt_phu_huynh = str(row.get("sđt phụ huynh", "")).strip()
+                # Hàm để lấy giá trị từ nhiều tên cột có thể
+                def get_value(row, possible_keys):
+                    for key in possible_keys:
+                        if key in row:
+                            val = str(row[key]).strip()
+                            if val:
+                                return val
+                    return ""
+
+                for index, row in df.iterrows():
+                    ten_thanh = get_value(row, ["tên thánh", "ten thanh", "tên thánh", "ten_thanh"])
+                    full_name = get_value(row, ["họ và tên", "ho va ten", "họ tên", "ho ten", "full name", "fullname", "họ_và_tên"])
+                    date_of_birth_str = get_value(row, ["ngày sinh", "ngay sinh", "date of birth", "dob", "ngày_sinh"])
+                    gender = get_value(row, ["giới tính", "gioi tinh", "gender", "sex"])
+                    class_name = get_value(row, ["lớp", "lop", "class", "lớp học", "khai tâm", "khai_tam"])
+                    ho_ten_bo = get_value(row, ["họ tên bố", "ho ten bo", "father name", "tên bố", "họ tên cha", "ho ten cha"])
+                    ho_ten_me = get_value(row, ["họ tên mẹ", "ho ten me", "mother name", "tên mẹ"])
+                    sdt_phu_huynh = get_value(row, ["sđt phụ huynh", "sdt phu huynh", "phone", "số điện thoại", "dien thoai", "sđt cha (mẹ)", "sdt cha (me)"])
 
                     # Bỏ qua dòng thiếu dữ liệu chính
                     if not full_name:
+                        errors.append(f"Dòng {index+2}: Thiếu họ và tên")
+                        skipped_count += 1
                         continue
 
                     # Chuyển đổi ngày sinh
                     try:
+                        # Thử định dạng dd-mm-yyyy hoặc dd/mm/yyyy
                         date_of_birth = datetime.strptime(date_of_birth_str, "%d-%m-%Y").date()
                     except:
                         try:
                             date_of_birth = datetime.strptime(date_of_birth_str, "%d/%m/%Y").date()
                         except:
-                            date_of_birth = None
+                            try:
+                                # Thử định dạng yyyy-mm-dd (như trong feedback)
+                                date_of_birth = datetime.strptime(date_of_birth_str, "%Y-%m-%d").date()
+                            except:
+                                try:
+                                    # Thử định dạng yyyy-mm-dd hh:mm:ss (như trong feedback)
+                                    date_of_birth = datetime.strptime(date_of_birth_str.split()[0], "%Y-%m-%d").date()
+                                except:
+                                    date_of_birth = None
 
-                    # Tìm lớp trong DB
-                    class_obj = Class.query.filter_by(name=class_name).first()
+                    # Bỏ qua nếu ngày sinh không hợp lệ
+                    if date_of_birth is None:
+                        errors.append(f"Dòng {index+2}: Ngày sinh không hợp lệ ({date_of_birth_str})")
+                        skipped_count += 1
+                        continue
 
-                    # Kiểm tra trùng tên (vì không có mã SV nữa)
-                    if Student.query.filter_by(full_name=full_name, date_of_birth=date_of_birth).first():
+                    # Tìm lớp trong DB (không phân biệt hoa thường và chuẩn hóa dấu cách)
+                    class_obj = Class.query.filter(Class.name.ilike(class_name.strip())).first()
+
+                    # Nếu không tìm thấy lớp, bỏ qua dòng này
+                    if not class_obj:
+                        errors.append(f"Dòng {index+2}: Lớp '{class_name}' không tồn tại trong hệ thống")
+                        skipped_count += 1
+                        continue
+
+                    # Kiểm tra trùng tên trong cùng lớp (cho phép trùng tên ở lớp khác)
+                    if Student.query.filter_by(full_name=full_name, date_of_birth=date_of_birth, class_id=class_obj.id).first():
+                        errors.append(f"Dòng {index+2}: Thiếu nhi đã tồn tại trong lớp này ({full_name}, {date_of_birth})")
+                        skipped_count += 1
                         continue
 
                     # Tạo thiếu nhi mới
@@ -506,7 +542,9 @@ def import_students():
                     added_count += 1
 
                 db.session.commit()
-                flash(f"✅ Đã nhập thành công {added_count} thiếu nhi!", "success")
+                flash(f"✅ Đã nhập thành công {added_count} thiếu nhi! Đã bỏ qua {skipped_count} dòng không hợp lệ.", "success")
+                if errors:
+                    session['import_errors'] = errors
 
             except Exception as e:
                 db.session.rollback()
@@ -514,4 +552,7 @@ def import_students():
                 return redirect(request.url)
 
     # GET request hoặc render lại
+    # Xóa session errors nếu không phải POST
+    if request.method == 'GET':
+        session.pop('import_errors', None)
     return render_template('import_students.html')

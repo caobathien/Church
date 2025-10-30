@@ -10,6 +10,7 @@ from io import BytesIO
 from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
+from flask import render_template, request, flash, redirect, url_for, session
 
 leader_bp = Blueprint('leader', __name__, url_prefix='/admin/leaders')
 
@@ -17,7 +18,11 @@ leader_bp = Blueprint('leader', __name__, url_prefix='/admin/leaders')
 @login_required
 @admin_required
 def list_leaders():
-    leaders = User.query.filter(User.role.in_(['huynh_truong', 'du_truong'])).join(UserProfile).all()
+    role_filter = request.args.get('role_filter')
+    query = User.query.filter(User.role.in_(['huynh_truong', 'du_truong'])).join(UserProfile)
+    if role_filter:
+        query = query.filter(User.role == role_filter)
+    leaders = query.all()
     return render_template('admin/leader_list.html', title='Quản lý Huynh Trưởng & Dự Trưởng', leaders=leaders)
 
 @leader_bp.route('/add', methods=['GET', 'POST'])
@@ -167,7 +172,7 @@ def import_leaders():
                         df = pd.read_csv(filepath)
 
                     # Lưu đường dẫn file vào session
-                    request.session['import_leader_file'] = filepath
+                    session['import_leader_file'] = filepath
 
                     # Xem trước 5 dòng đầu tiên
                     preview_data = df.head(5).to_html(classes="table table-bordered table-striped table-sm", index=False)
@@ -182,7 +187,7 @@ def import_leaders():
 
         # === Nút XÁC NHẬN NHẬP ===
         elif 'confirm' in request.form:
-            filepath = request.session.get('import_leader_file')
+            filepath = session.get('import_leader_file')
             if not filepath or not os.path.exists(filepath):
                 flash('❌ Không tìm thấy file để nhập. Vui lòng tải lại!', 'danger')
                 return redirect(request.url)
@@ -194,23 +199,27 @@ def import_leaders():
                 else:
                     df = pd.read_csv(filepath)
 
-                # Chuẩn hóa tên cột
-                df.columns = df.columns.str.strip().str.lower()
+                # Giả sử file không có header, cột theo thứ tự: Họ tên, Email, Vai trò, Tên Thánh, SĐT, Địa chỉ
+                # Bỏ qua các dòng đầu nếu trống
+                df = df.dropna(how='all')  # Bỏ dòng toàn NaN
 
                 added_count = 0
 
                 for _, row in df.iterrows():
-                    username = str(row.get("username", "")).strip()
-                    email = str(row.get("email", "")).strip()
-                    role_str = str(row.get("vai trò", "")).strip()
-                    ho_ten = str(row.get("họ tên", "")).strip()
-                    ten_thanh = str(row.get("tên thánh", "")).strip()
-                    sdt = str(row.get("sđt", "")).strip()
-                    dia_chi = str(row.get("địa chỉ", "")).strip()
+                    # Lấy dữ liệu theo vị trí cột
+                    ho_ten = str(row.iloc[0]).strip() if len(row) > 0 else ''
+                    email = str(row.iloc[1]).strip() if len(row) > 1 else ''
+                    role_str = str(row.iloc[2]).strip() if len(row) > 2 else ''
+                    ten_thanh = str(row.iloc[3]).strip() if len(row) > 3 else ''
+                    sdt = str(row.iloc[4]).strip() if len(row) > 4 else ''
+                    dia_chi = str(row.iloc[5]).strip() if len(row) > 5 else ''
 
-                    # Bỏ qua dòng thiếu dữ liệu chính
-                    if not username or not email or not ho_ten:
+                    # Bỏ qua nếu họ tên hoặc email trống
+                    if not ho_ten or ho_ten.lower() == 'nan' or not email or email.lower() == 'nan':
                         continue
+
+                    # Tạo username từ họ tên: lowercase, thay khoảng trắng bằng _, loại bỏ dấu nếu cần
+                    username = ho_ten.lower().replace(' ', '_').replace('đ', 'd').replace('Đ', 'd').replace('ư', 'u').replace('Ư', 'u').replace('ơ', 'o').replace('Ơ', 'o').replace('ă', 'a').replace('Ă', 'a').replace('â', 'a').replace('Â', 'a').replace('ê', 'e').replace('Ê', 'e').replace('ô', 'o').replace('Ô', 'o').replace('ư', 'u').replace('Ư', 'u').replace('í', 'i').replace('Í', 'i').replace('ý', 'y').replace('Ý', 'y').replace('ú', 'u').replace('Ú', 'u').replace('ủ', 'u').replace('Ủ', 'u').replace('ũ', 'u').replace('Ũ', 'u').replace('ụ', 'u').replace('Ụ', 'u').replace('à', 'a').replace('À', 'a').replace('á', 'a').replace('Á', 'a').replace('ả', 'a').replace('Ả', 'a').replace('ã', 'a').replace('Ã', 'a').replace('ạ', 'a').replace('Ạ', 'a').replace('è', 'e').replace('È', 'e').replace('é', 'e').replace('É', 'e').replace('ẻ', 'e').replace('Ẻ', 'e').replace('ẽ', 'e').replace('Ẽ', 'e').replace('ẹ', 'e').replace('Ẹ', 'e').replace('ì', 'i').replace('Ì', 'i').replace('í', 'i').replace('Í', 'i').replace('ỉ', 'i').replace('Ỉ', 'i').replace('ĩ', 'i').replace('Ĩ', 'i').replace('ị', 'i').replace('Ị', 'i').replace('ò', 'o').replace('Ò', 'o').replace('ó', 'o').replace('Ó', 'o').replace('ỏ', 'o').replace('Ỏ', 'o').replace('õ', 'o').replace('Õ', 'o').replace('ọ', 'o').replace('Ọ', 'o').replace('ù', 'u').replace('Ù', 'u').replace('ú', 'u').replace('Ú', 'u').replace('ủ', 'u').replace('Ủ', 'u').replace('ũ', 'u').replace('Ũ', 'u').replace('ụ', 'u').replace('Ụ', 'u').replace('ỳ', 'y').replace('Ỳ', 'y').replace('ý', 'y').replace('Ý', 'y').replace('ỷ', 'y').replace('Ỷ', 'y').replace('ỹ', 'y').replace('Ỹ', 'y').replace('ỵ', 'y').replace('Ỵ', 'y')
 
                     # Chuyển đổi vai trò
                     if role_str.lower() in ['huynh trưởng', 'huynh_truong']:
@@ -233,9 +242,9 @@ def import_leaders():
                     )
                     new_profile = UserProfile(
                         ho_ten=ho_ten,
-                        ten_thanh=ten_thanh if ten_thanh else None,
-                        sdt=sdt if sdt else None,
-                        dia_chi=dia_chi if dia_chi else None
+                        ten_thanh=ten_thanh if ten_thanh and ten_thanh.lower() != 'nan' else None,
+                        sdt=sdt if sdt and sdt.lower() != 'nan' else None,
+                        dia_chi=dia_chi if dia_chi and dia_chi.lower() != 'nan' else None
                     )
                     new_user.profile = new_profile
 

@@ -29,8 +29,8 @@
                             <label for="file" class="form-label">Chọn file Excel (.xlsx) hoặc CSV (.csv)</label>
                             <input type="file" class="form-control" id="file" name="file" accept=".xlsx,.csv" required>
                             <div class="form-text">
-                                File phải có các cột: Username, Email, Vai trò, Họ tên, Tên Thánh (tùy chọn), SĐT (tùy chọn), Địa chỉ (tùy chọn)<br>
-                                <strong>Lưu ý:</strong> Mật khẩu mặc định sẽ là "123456" - hãy yêu cầu người dùng đổi mật khẩu sau khi đăng nhập lần đầu.
+                                File Excel phải có các cột theo thứ tự: Họ tên, Email, Vai trò, Tên Thánh (tùy chọn), SĐT (tùy chọn), Địa chỉ (tùy chọn)<br>
+                                <strong>Lưu ý:</strong> Username sẽ được tạo tự động từ họ tên (loại bỏ dấu, thay khoảng trắng bằng _). Mật khẩu mặc định sẽ là "123456" - hãy yêu cầu người dùng đổi mật khẩu sau khi đăng nhập lần đầu.
                             </div>
                         </div>
                         <button type="submit" name="preview" class="btn btn-primary">Xem Trước</button>

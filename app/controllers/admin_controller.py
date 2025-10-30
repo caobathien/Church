@@ -79,8 +79,8 @@ def dashboard():
 def assign_leader_to_class():
     """Trang phân công Huynh trưởng vào lớp."""
         
-    # Lấy danh sách Huynh/Dự trưởng và các Lớp
-    leaders = User.query.filter(User.role.in_(['huynh_truong', 'du_truong'])).all()
+    # Lấy danh sách Huynh/Dự trưởng chưa được phân công vào lớp nào và các Lớp
+    leaders = User.query.filter(User.role.in_(['huynh_truong', 'du_truong'])).filter(~User.assigned_classes.any()).all()
     classes = ClassModel.query.all()
     
     return render_template('admin/assign_leader.html',
@@ -97,7 +97,20 @@ def assign_leader_to_class():
 def list_classes():
     """Trang danh sách các lớp học."""
     classes = ClassModel.query.all()
-    return render_template('admin/class_list.html', title='Quản lý Lớp học', classes=classes)
+
+    # Lấy thống kê điểm danh cho từng lớp
+    from app.models.attendance import Attendance
+    from sqlalchemy import func
+    attendance_summary = {}
+
+    for class_obj in classes:
+        # Đếm số ngày đã điểm danh cho lớp này
+        attendance_days = db.session.query(func.count(func.distinct(Attendance.date))).filter_by(class_id=class_obj.id).scalar()
+        attendance_summary[class_obj.id] = {
+            'attendance_days': attendance_days
+        }
+
+    return render_template('admin/class_list.html', title='Quản lý Lớp học', classes=classes, attendance_summary=attendance_summary)
 
 # --- QUẢN LÝ THÔNG BÁO (CRUD - Hoàn thiện) ---
 
@@ -217,7 +230,16 @@ def assign_leader():
 
         return redirect(url_for('admin.assign_leader'))
 
-    # GET request: Hiển thị danh sách lớp và Huynh trưởng
+    # GET request: Hiển thị danh sách lớp và Huynh trưởng chưa được phân công
     classes = ClassModel.query.all()
-    leaders = User.query.filter(User.role.in_(['huynh_truong', 'du_truong'])).all()
+    leaders = User.query.filter(User.role.in_(['huynh_truong', 'du_truong'])).filter(~User.assigned_classes.any()).all()
     return render_template('admin/assign_leader.html', title='Phân công Huynh Trưởng', classes=classes, leaders=leaders)
+
+@admin_bp.route('/class/<int:class_id>/leaders')
+@login_required
+@admin_required
+def view_class_leaders(class_id):
+    """Trang xem chi tiết Huynh trưởng/Dự trưởng được phân công vào một lớp."""
+    class_obj = ClassModel.query.get_or_404(class_id)
+    leaders = class_obj.leaders.all()
+    return render_template('admin/class_leaders.html', title=f'Huynh Trưởng Lớp {class_obj.name}', class_obj=class_obj, leaders=leaders)

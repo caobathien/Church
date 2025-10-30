@@ -3,6 +3,21 @@
 <div class="container mt-5">
     <h2 class="mb-4"><i class="fas fa-file-upload"></i> Nhập Thiếu Nhi từ file Excel</h2>
 
+    <div class="alert alert-info">
+        <strong>Hướng dẫn:</strong> File Excel phải có các cột: "Tên Thánh", "Họ và tên", "Ngày sinh" (định dạng dd-mm-yyyy, dd/mm/yyyy, hoặc yyyy-mm-dd), "Giới tính", "Lớp", "Họ tên Bố", "Họ tên Mẹ", "SĐT Phụ huynh". Hệ thống hỗ trợ nhiều tên cột khác nhau. Các dòng thiếu "Họ và tên" hoặc "Ngày sinh" không hợp lệ sẽ bị bỏ qua.
+    </div>
+
+    {% if session.get('import_errors') %}
+    <div class="alert alert-warning">
+        <strong>Chi tiết lỗi:</strong>
+        <ul>
+            {% for error in session.import_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
     <form method="POST" enctype="multipart/form-data">
         {% if not preview %}
             <div class="form-group">
@@ -13,7 +28,7 @@
                 <i class="fas fa-eye"></i> Xem trước dữ liệu
             </button>
         {% else %}
-            <h5 class="mt-4">📋 Tôi đang xem dữ liệu hẹ hẹ</h5>
+            <h5 class="mt-4">📋 Xem trước dữ liệu (5 dòng đầu tiên)</h5>
             <div class="table-responsive mt-3">
                 {{ preview|safe }}
             </div>
