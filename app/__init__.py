@@ -52,4 +52,5 @@ def create_app(config_class=Config):
     app.register_blueprint(leader_bp) # Đăng ký blueprint cho Leader
     app.register_blueprint(attendance_bp) # Đăng ký blueprint cho Attendance
     app.register_blueprint(routes_main_bp, name='main_routes')
+
     return app
