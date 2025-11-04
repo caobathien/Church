@@ -1,147 +1,142 @@
-/* ✝️ Tông nền gợi cảm hứng nhà thờ */
-body.register-body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(120deg, rgba(245, 247, 250, 0.96), rgba(233, 236, 239, 0.95)),
-                url("https://source.unsplash.com/1600x900/?cathedral,church,stained-glass,light");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+body {
+    background: linear-gradient(135deg, #fff8e1 0%, #e3f2fd 100%);
+}
+body {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f1f8e9 100%);
     min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* 🌤️ Thẻ đăng ký */
-.register-card {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-/* Hiệu ứng ánh sáng quay nhẹ – tượng trưng cho ánh sáng nhà thờ */
-.register-card::before {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 70%);
-    animation: rotateLight 12s linear infinite;
-    z-index: 0;
-}
-
-@keyframes rotateLight {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.register-card * {
-    position: relative;
-    z-index: 1;
-}
-
-/* ✨ Input focus và lỗi */
-.form-control.is-invalid {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
-}
-
-/* 🌾 Nhãn phụ, liên kết */
-.form-text {
-    font-size: 0.9rem;
-    color: #666;
-}
-
-.form-text a {
-    color: var(--primary-color);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.form-text a:hover {
-    color: var(--dark-color);
-    text-decoration: underline;
-}
-
-/* 💠 Nút phụ */
-.btn-secondary {
+/* Container */
+.register-container {
     width: 100%;
-    padding: 0.9rem;
-    font-size: 1.05rem;
-    font-weight: 600;
-    background: #6c757d;
-    color: #fff;
-    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+/* Card */
+.register-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 480px;
+    padding: 2.5rem 3rem;
+    animation: slideUp 0.6s ease;
+}
+
+/* Title */
+.register-title {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+}
+
+/* Alerts */
+.alert {
+    text-align: left;
+    font-size: 0.9rem;
     border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #34495e;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    display: inline-block;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 0.95rem;
     transition: all 0.3s ease;
 }
 
-.btn-secondary:hover {
-    background: #5a6268;
-    transform: translateY(-2px);
+.form-control:focus {
+    border-color: #42a5f5;
+    box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.2);
+    outline: none;
 }
 
-/* 🕊️ Footer đăng ký */
+.is-invalid {
+    border-color: #e74c3c !important;
+}
+
+.invalid-feedback {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* Button */
+.btn-register {
+    width: 100%;
+    background: linear-gradient(135deg, #42a5f5, #1e88e5);
+    color: white;
+    border: none;
+    padding: 0.85rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.btn-register:hover {
+    background: linear-gradient(135deg, #1e88e5, #1565c0);
+    transform: translateY(-1px);
+}
+
+/* Footer */
 .register-footer {
+    text-align: center;
+    margin-top: 1.5rem;
     color: #555;
     font-size: 0.9rem;
 }
 
 .register-footer a {
-    color: var(--primary-color);
+    color: #42a5f5;
+    text-decoration: none;
     font-weight: 600;
 }
 
 .register-footer a:hover {
-    color: var(--dark-color);
+    text-decoration: underline;
 }
 
-/* 🌸 Liên kết đăng nhập */
-.login-link {
-    margin-top: 1rem;
-    font-size: 0.95rem;
-    color: #666;
+/* Animation */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.login-link a {
-    color: var(--primary-color);
-    font-weight: 600;
-    transition: color 0.2s ease;
-}
-
-.login-link a:hover {
-    color: var(--dark-color);
-}
-
-/* 📱 Responsive */
-@media (max-width: 768px) {
-    .register-card {
-        padding: 2rem;
-    }
-
-    .register-title {
-        font-size: 1.5rem;
-    }
-
-    .form-control {
-        height: 46px;
-    }
-
-    .btn-register {
-        font-size: 1rem;
-    }
-}
-
+/* Responsive */
 @media (max-width: 480px) {
     .register-card {
-        padding: 1.75rem;
-    }
-
-    .register-title {
-        font-size: 1.4rem;
-    }
-
-    .btn-register, .btn-secondary {
-        font-size: 1rem;
-        padding: 0.8rem;
+        padding: 2rem;
     }
 }

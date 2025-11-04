@@ -1,142 +1,146 @@
-/* 🌅 Hiệu ứng ánh sáng nhà thờ */
-.auth-body {
-    background: linear-gradient(120deg, rgba(245, 247, 250, 0.95), rgba(233, 236, 239, 0.95)),
-                url("https://source.unsplash.com/1600x900/?cathedral,stained-glass,light");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    font-family: 'Poppins', sans-serif;
+/* Reset & font setup */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
 }
 
-/* 🕊️ Thẻ đăng nhập */
-.login-card {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
+body {
+    background: linear-gradient(135deg, #eef2f3 0%, #d9e2ec 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.login-card::before {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 70%);
-    animation: rotateLight 10s linear infinite;
-    z-index: 0;
-}
-
-@keyframes rotateLight {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.login-card * {
-    position: relative;
-    z-index: 1;
-}
-
-/* 🪶 Nhãn và liên kết */
-.form-label {
-    font-weight: 600;
-    color: var(--dark-color);
-}
-
-.form-text {
-    font-size: 0.9rem;
-    color: #666;
-    text-align: right;
-}
-
-.form-text a {
-    color: var(--primary-color);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.form-text a:hover {
-    color: var(--dark-color);
-}
-
-/* 🪞 Input lỗi */
-.form-control.is-invalid {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
-}
-
-/* 🔑 Nút phụ */
-.btn-secondary {
+/* Container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    padding: 0.9rem;
-    background: #6c757d;
-    color: #fff;
+    padding: 2rem;
+}
+
+/* Card */
+.login-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem 3rem;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    animation: fadeIn 0.6s ease;
+}
+
+/* Logo */
+.login-logo {
+    width: 90px;
+    margin-bottom: 1.5rem;
+}
+
+/* Title */
+.login-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+}
+
+/* Alerts */
+.alert {
+    text-align: left;
+    font-size: 0.9rem;
+    border-radius: 6px;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+    outline: none;
+}
+
+/* Checkbox */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.form-check-input {
+    accent-color: #3498db;
+}
+
+/* Button */
+.btn-login {
+    width: 100%;
+    background: #3498db;
+    color: white;
     border: none;
+    padding: 0.8rem;
     border-radius: 8px;
     font-weight: 600;
-    transition: all 0.3s;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
 }
 
-.btn-secondary:hover {
-    background: #5a6268;
-    transform: translateY(-2px);
+.btn-login:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
 }
 
-/* 🕯️ Footer */
+/* Footer */
 .login-footer {
-    color: #555;
+    margin-top: 1.5rem;
     font-size: 0.9rem;
+    color: #666;
 }
 
 .login-footer a {
-    color: var(--primary-color);
-    font-weight: 500;
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
 }
 
 .login-footer a:hover {
-    color: var(--dark-color);
     text-decoration: underline;
 }
 
-/* ✨ Đăng ký */
-.register-link {
-    margin-top: 1rem;
-    font-size: 0.95rem;
-    color: #666;
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.register-link a {
-    color: var(--primary-color);
-    font-weight: 600;
-    transition: color 0.2s ease;
-}
-
-.register-link a:hover {
-    color: var(--dark-color);
-}
-
-/* 🪔 Responsive (mobile & tablet) */
-@media (max-width: 768px) {
-    .login-card {
-        padding: 2rem;
-    }
-    .login-title {
-        font-size: 1.5rem;
-    }
-    .form-control {
-        height: 46px;
-    }
-}
-
+/* Responsive */
 @media (max-width: 480px) {
     .login-card {
-        padding: 1.75rem;
-    }
-    .login-title {
-        font-size: 1.4rem;
-    }
-    .btn-login, .btn-secondary {
-        font-size: 1rem;
-        padding: 0.8rem;
+        padding: 2rem;
     }
 }

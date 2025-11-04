@@ -1,84 +1,193 @@
-body {
-  background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.9)),
-              url('https://source.unsplash.com/1600x900/?cathedral,stained-glass');
-  background-size: cover;
-  background-attachment: fixed;
-  font-family: 'Poppins', sans-serif;
-  color: #333;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
 }
 
-.welcome-section h2 {
-  font-weight: 600;
+body {
+  background-color: #f8f9fa;
   color: #2c3e50;
 }
 
+.welcome-section {
+  padding: 2rem 0;
+  background: linear-gradient(135deg, #e3f2fd, #fff3e0);
+  border-radius: 12px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+}
+
+.welcome-section h2 {
+  font-weight: 700;
+  color: #1565c0;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-section p {
+  color: #546e7a;
+  font-size: 1rem;
+}
+
 .section-title {
-  font-weight: 600;
-  border-left: 4px solid #d4af37;
-  padding-left: 10px;
-  margin-bottom: 15px;
-  color: #444;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  border-left: 5px solid #ffc107;
+  padding-left: 0.75rem;
 }
 
-.text-gold {
-  color: #d4af37;
-}
-
-.quick-card {
-  transition: transform 0.2s, box-shadow 0.2s;
+.quick-access .quick-card {
+  transition: all 0.3s ease;
   border: none;
-  border-left: 4px solid #e3c567;
-  background: #fff;
+  border-radius: 10px;
 }
 
-.quick-card:hover {
+.quick-access .quick-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+}
+
+.quick-access i {
+  min-width: 40px;
+}
+
+.quick-access .card-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1a237e;
+}
+
+.quick-access .card-text {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.announcements-section {
+  margin-bottom: 3rem;
 }
 
 .announcement-card {
   border: none;
-  border-top: 4px solid #e3c567;
-  background: rgba(255,255,255,0.9);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.announcement-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
 .announcement-img {
-  height: 250px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  background-color: #f8f9fa;
   object-fit: cover;
-  border-bottom: 1px solid #eee;
+  display: block;
+  margin: 0 auto;
 }
 
-.feedback-section {
-  border-top: 4px solid #e3c567;
+.text-gold {
+  color: #b8860b;
 }
 
-.btn-primary {
-  background-color: #e3c567;
-  border: none;
-  color: #333;
-}
-
-.btn-primary:hover {
-  background-color: #d4af37;
-  color: white;
-}
-
-.alert-info {
-  background-color: rgba(230, 240, 255, 0.8);
-  border-left: 4px solid #3b5998;
+.card-footer small {
+  font-size: 0.85rem;
 }
 
 .church-slider {
+  position: relative;
   width: 100%;
-  max-height: 500px;
+  height: auto;
+  object-fit: contain; 
   overflow: hidden;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  background: #eceff1;
 }
 
 .church-slider img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
-  transition: opacity 1s ease-in-out;
+  animation: fadeSlide 10s infinite alternate;
+}
+
+@keyframes fadeSlide {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.feedback-section {
+  border: none;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.feedback-section h4 {
+  color: #2c3e50;
+  font-weight: 700;
+}
+
+.feedback-section .form-control {
+  border-radius: 8px;
+  resize: none;
+  border: 1px solid #ced4da;
+  transition: border 0.3s ease;
+}
+
+.feedback-section .form-control:focus {
+  border-color: #42a5f5;
+  box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.15);
+}
+
+.feedback-section .btn {
+  width: 100%;
+  background: linear-gradient(135deg, #42a5f5, #1e88e5);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.feedback-section .btn:hover {
+  background: linear-gradient(135deg, #1e88e5, #1565c0);
+}
+
+.alert-info {
+  background: #e3f2fd;
+  border: none;
+  color: #0d47a1;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.shadow-sm {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+}
+
+@media (max-width: 992px) {
+  .quick-access .card-body {
+    flex-direction: column;
+    text-align: center;
+  }
+  .quick-access i {
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .welcome-section {
+    padding: 1.5rem 1rem;
+  }
+  .announcement-img,
+  .church-slider {
+    height: 200px;
+  }
 }
