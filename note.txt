@@ -43,7 +43,7 @@ git branch -M main
 git push -u origin main
 
 #push lên pythonanywhere.com dự án của tôi
-git clone https://github.com/caobathien/student_manager.git
+git clone https://github.com/caobathien/Church.git
 
 #uploadDB
 🧩 Bước 1. Cài thư viện
@@ -111,7 +111,6 @@ Chạy trong terminal (vẫn trong môi trường ảo):
 cd ~/Church
 flask db init
 
-
 Lúc này sẽ xuất hiện thư mục migrations/ trong project của bạn.
 
 🔁 Bước 5. Khi bạn thay đổi model
@@ -144,4 +143,21 @@ USE ThienCao$ChurchDB;
 DESCRIBE student;
 
 
-→ Bạn sẽ thấy cột mới vừa được thêm, mà dữ liệu cũ vẫn nguyên vẹn 💪
+#câu lệnh upload code lên pythonanywhere.com
+git pull origin main
+
+#nâng cấp tk trong database  pythonanywhere.com
+flask shell
+from app import db
+from app.models.user import User
+
+# 1. Tìm người dùng theo email
+user = User.query.filter_by(email='caobathien01112004@gmail.com').first()
+
+# 2. Kiểm tra và nâng cấp
+if user:
+    user.role = 'admin'  # Đổi vai trò thành admin
+    db.session.commit()  # Lưu vào database
+    print(f"Thành công! Tài khoản {user.username} đã là Admin.")
+else:
+    print("Không tìm thấy tài khoản này! Kiểm tra lại email.")
